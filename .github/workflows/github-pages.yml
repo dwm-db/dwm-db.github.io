@@ -43,7 +43,7 @@ jobs:
 
       # Publish the site
       - name: Publish
-        run: dotnet publish 'DWM Library.sln' -c:Release -o:publish -p:GHPages=true
+        run: dotnet publish 'DWM Library.sln' -c:Release --property:PublishDir=publish -p:GHPages=true
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
