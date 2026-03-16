@@ -43,13 +43,13 @@ jobs:
 
       # Publish the site
       - name: Publish
-        run: dotnet publish 'DWM Library.sln' -c:Release --property:PublishDir=dwm-lib -p:GHPages=true
+        run: dotnet publish 'DWM Library.sln' -c:Release --property:PublishDir=${{env.DOTNET_ROOT}}/dwm-lib -p:GHPages=true
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: dwm-lib/DWM Library/publish/wwwroot
+          path: ${{env.DOTNET_ROOT}}/dwm-lib/DWM Library/publish/wwwroot
           
       - name: Deploy to GitHub Pages
         id: deployment
