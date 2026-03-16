@@ -1,0 +1,46 @@
+﻿@page "/skill/type/{typeName}"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Skill Type - @typeName</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row mb-3">
+            <h1 class="col-12">Type @(typeName) Skills</h1>
+            <SkillCardGrid skills=@(skills!.OrderBy(skill => skill.Id).ToArray()) />
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <section>
+                    <h2>Requirements</h2>
+                    <SkillRequirements skills=@(skills) includeNames=true />
+                </section>
+            </div>
+        </div>
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    [Parameter]
+    public required string typeName { get; set; }
+
+    private bool dataLoaded => (skills is not null);
+    private bool notFound = false;
+
+    private Services.Skill[]? skills;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var _typeName = Uri.UnescapeDataString(typeName);
+
+        skills = await DataService.GetSkillsByTypeAsync(_typeName);
+
+        notFound = (skills is null);
+    }
+}

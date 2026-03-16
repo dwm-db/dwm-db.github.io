@@ -1,0 +1,91 @@
+﻿@page "/skill/{skillName}"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Skill - @skillName</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12">@skill!.Name</h1>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <section>
+                    @* <h2>Skill Info</h2> *@
+                    <SkillInfo upgradeGroup=@(upgradeGroup) skill=@(skill) />
+                </section>
+            </div>
+        </div>
+        @if (GetMonsters() is not null)
+        {
+            <div class="row">
+                <section>
+                    <h2>Monsters</h2>
+                    <MonsterCardGrid monsters=@(GetMonsters()) halfSize=false />
+                </section>
+            </div>
+        }
+        @if (combinesFrom || combinesTo)
+        {
+            <div class="d-flex flex-row flex-wrap justify-content-center">
+                @if (combinesFrom)
+                {
+                    <section class="mx-auto p-2">
+                        <h2>Combines From</h2>
+                        <SkillCombination skill=@(skill) currentSkill=@(skill) />
+                    </section>
+                }
+                @if (combinesTo)
+                {
+                    <section class="mx-auto p-2">
+                        <h2>Combines To</h2>
+                        @foreach (var sk in upgradeGroup!.Where(combo => combo.CombinesTo is not null && combo.CombinesTo.Length > 0).SelectMany(combo => combo.CombinesTo!).DistinctBy(skill => skill.Id))
+                        {
+                            <SkillCombination skill=@(sk) currentSkill=@(skill) />
+                        }
+                    </section>
+                }
+            </div>
+        }
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    [Parameter]
+    public required string skillName { get; set; }
+
+    private bool dataLoaded => (skill is not null);
+    private bool notFound = false;
+
+    private Services.Skill? skill;
+    private Services.Combination[]? upgradeGroup;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var _skillName = Uri.UnescapeDataString(skillName);
+
+        skill = await DataService.GetSkillByNameAsync(_skillName);
+        upgradeGroup = (await DataService.GetSkillsByUpgradeGroupAsync(_skillName)) ?? [];
+
+        notFound = (skill is null);
+    }
+
+    private bool combinesFrom => (skill is not null && upgradeGroup is not null && upgradeGroup?.FirstOrDefault(combo => combo.Skill.Id == skill.Id && combo.CombinesFrom is not null && combo.CombinesFrom.Length > 0) is not null);
+    private bool combinesTo => (skill is not null && upgradeGroup is not null && (upgradeGroup?.Any(combo => combo.CombinesTo is not null && combo.CombinesTo.Length > 0) ?? false));
+
+    private Services.Monster[]? GetMonsters()
+    {
+        if (upgradeGroup is not null && upgradeGroup.Length > 1)
+        {
+            return upgradeGroup?.Select(combo => combo.Skill)?.Where(skill => skill.Monsters is not null && skill.Monsters.Length > 0)?.SelectMany(skill => skill.Monsters!)?.OrderBy(monster => monster.Id)?.ToArray();
+        }
+
+        return skill?.Monsters?.OrderBy(monster => monster.Id)?.ToArray();
+    }
+}

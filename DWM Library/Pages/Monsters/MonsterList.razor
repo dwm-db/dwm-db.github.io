@@ -1,0 +1,154 @@
+﻿@page "/monster"
+@page "/monster/family"
+@page "/monster/location"
+@page "/monster/size"
+@page "/monster/rarity"
+@implements IDisposable
+@inject IDataService DataService
+@inject NavigationManager NavigationManager
+
+<PageTitle>DWM Library - Monsters</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12">Monsters</h1>
+        </div>
+        <div class="row">
+            <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="monster" Match="NavLinkMatch.All">
+                        All Monsters
+                    </NavLink>
+                </li>
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="/monster/family">
+                        By Family
+                    </NavLink>
+                </li>
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="/monster/location">
+                        By Location
+                    </NavLink>
+                </li>
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="/monster/size">
+                        By Size
+                    </NavLink>
+                </li>
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="/monster/rarity">
+                        By Rarity
+                    </NavLink>
+                </li>
+            </ul>
+        </div>
+        <hr class="mb-5"/>
+        <div class="row tab-content">
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.ALL))" role="tabpanel">
+                <MonsterCardGrid monsters=@(monsters!.OrderBy(monster => monster.Name).ToArray()) />
+            </div>
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.FAMILY))" role="tabpanel">
+                @foreach (var family in Enum.GetValues<Services.FamilyName>())
+                {
+                    <div class="row mb-5">
+                        <HeaderLink href=@($"/monster/family/{Uri.EscapeDataString(family.ToJsonString())}") text=@($"The {family.ToJsonString()} Family") />
+                        <MonsterCardGrid monsters=@(monsters!.Where(monster => monster.Family == family).OrderBy(monster => monster.Id).ToArray()) />
+                    </div>
+                }
+            </div>
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.LOCATION))" role="tabpanel">
+                @foreach (var location in Enum.GetValues<Services.LocationType>())
+                {
+                    <div class="row mb-5">
+                        <HeaderLink href=@($"/monster/location/{Uri.EscapeDataString(location.ToJsonString())}") text=@(location.ToJsonString()) />
+                        <MonsterCardGrid monsters=@(monsters!.Where(monster => monster.Locations is not null && monster.Locations.Any(loc => loc.Name == location)).OrderBy(monster => monster.Id).ToArray()) />
+                    </div>
+                }
+            </div>
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.SIZE))" role="tabpanel">
+                @foreach (var size in Enum.GetValues<Services.MonsterSize>())
+                {
+                    <div class="row mb-5">
+                        <HeaderLink href=@($"/monster/size/{Uri.EscapeDataString(size.ToJsonString())}") text=@($"Size {size.ToJsonString()}") />
+                        <MonsterCardGrid monsters=@(monsters!.Where(monster => monster.Size == size).OrderBy(monster => monster.Id).ToArray()) />
+                    </div>
+                }
+            </div>
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.RARITY))" role="tabpanel">
+                @foreach (var rarity in Enum.GetValues<Services.MonsterRarity>())
+                {
+                    <div class="row mb-5">
+                        <HeaderLink href=@($"/monster/rarity/{Uri.EscapeDataString(rarity.ToJsonString())}") text=@(rarity.ToJsonString()) />
+                        <MonsterCardGrid monsters=@(monsters!.Where(monster => monster.Rarity == rarity).OrderBy(monster => monster.Id).ToArray()) />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool dataLoaded => (monsters is not null && monsters.Length > 0);
+
+    private Tabs currentTab = Tabs.ALL;
+    private Services.Monster[]? monsters;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to the event
+        NavigationManager.LocationChanged += LocationChanged;
+
+        monsters = await DataService.GetMonstersAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        SwitchCurrentTab();
+    }
+
+    void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        string navigationMethod = e.IsNavigationIntercepted ? "HTML" : "code";
+        string location = e.Location;
+        SwitchCurrentTab(location);
+        StateHasChanged();
+    }
+
+    void SwitchCurrentTab(string? location = null)
+    {
+        if (location is null)
+            location = string.Empty;
+
+        currentTab = currentTab switch
+        {
+            var tab when (NavigationManager.Uri.EndsWith("/monster/family") || location.EndsWith("/monster/family")) => Tabs.FAMILY,
+            var tab when (NavigationManager.Uri.EndsWith("/monster/location") || location.EndsWith("/monster/location")) => Tabs.LOCATION,
+            var tab when (NavigationManager.Uri.EndsWith("/monster/size") || location.EndsWith("/monster/size")) => Tabs.SIZE,
+            var tab when (NavigationManager.Uri.EndsWith("/monster/rarity") || location.EndsWith("/monster/rarity")) => Tabs.RARITY,
+            _ => Tabs.ALL
+
+        };
+    }
+
+    void IDisposable.Dispose()
+    {
+        // Unsubscribe from the event when our component is disposed
+        NavigationManager.LocationChanged -= LocationChanged;
+    }
+
+    private string IsShowActive(Tabs tab)
+    {
+        return (tab == currentTab) ? "show active" : string.Empty;
+    }
+
+    private enum Tabs
+    {
+        ALL,
+        FAMILY,
+        LOCATION,
+        SIZE,
+        RARITY
+    }
+}

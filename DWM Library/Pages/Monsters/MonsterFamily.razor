@@ -1,0 +1,56 @@
+﻿@page "/monster/family/{familyName}"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Family - @(Uri.UnescapeDataString(familyName))</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12">The @(Uri.UnescapeDataString(familyName)) Family</h1>
+        </div>
+        <div class="row mb-3">
+            <section>
+                <MonsterCardGrid monsters=@(monsters!.OrderBy(monster => monster.Id).ToArray()) />
+            </section>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <section>
+                    <h2>Growths</h2>
+                    <MonsterGrowths monsters=@(monsters) includeNames=true />
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section>
+                    <MonsterBreeds breeds=@(breeds) includeTargets=true />
+                </section>
+            </div>
+        </div>
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    [Parameter]
+    public required string familyName { get; set; }
+
+    private bool dataLoaded => (monsters is not null && breeds is not null);
+    private bool notFound = false;
+
+    private Services.Monster[]? monsters;
+    private Services.Breed[]? breeds;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var _familyName = Uri.UnescapeDataString(familyName);
+        monsters = await DataService.GetMonstersByFamilyAsync(_familyName);
+        breeds = (await DataService.GetBreedsByFamilyAsync(_familyName)) ?? [];
+
+        notFound = (monsters is null);
+    }
+}

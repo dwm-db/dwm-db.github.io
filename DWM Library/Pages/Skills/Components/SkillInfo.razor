@@ -1,0 +1,86 @@
+﻿@if (dataLoaded)
+{
+    <div class="row SkillInfo justify-content-lg-center align-content-lg-center text-start mb-3">
+        <div class="col-12 col-md-5 col-lg-4 col-xl-3 mb-3">
+            <section>
+                <div class="row align-items-center mb-3">
+                    <h3 class="col-5 mb-0">Type</h3>
+                    <span class="col-7">
+                        <a href=@($"/skill/type/{Uri.EscapeDataString(skill!.Type.ToJsonString())}")>
+                            @(skill.Type.ToJsonString())
+                        </a>
+                    </span>
+                </div>
+                <div class="row align-items-center mb-3">
+                    <h3 class="col-5 mb-0">Category</h3>
+                    <span class="col-7">
+                        @if (skill.Category is not null)
+                        {
+                            <a href=@($"/skill/category/{Uri.EscapeDataString(skill?.Category?.ToJsonString() ?? string.Empty)}")>
+                                @(skill!.Category.ToJsonString())
+                            </a>
+                        }
+                        else
+                        {
+                            <a href=@($"/skill/category/{Uri.EscapeDataString(Services.SkillCategory.NONE.ToJsonString())}")>
+                                @(Services.SkillCategory.NONE.ToJsonString())
+                            </a>
+                        }
+                    </span>
+                </div>
+                <div class="row align-items-center mb-3">
+                    <h3 class="col-5 mb-0">Attribute</h3>
+                    <span class="col-7">
+                        @if (skill.Attribute is not null)
+                        {
+                            <a href=@($"/skill/attribute/{Uri.EscapeDataString(skill?.Attribute?.ToJsonString() ?? string.Empty)}")>
+                                @(skill!.Attribute.ToJsonString())
+                            </a>
+                        }
+                        else
+                        {
+                            <a href=@($"/skill/attribute/{Uri.EscapeDataString(Services.SkillAttribute.NONE.ToJsonString())}")>
+                                @(Services.SkillAttribute.NONE.ToJsonString())
+                            </a>
+                        }
+                    </span>
+                </div>
+                <div class="row align-items-center">
+                    <h3 class="col-12 mb-0">Description</h3>
+                    <p class="col-12">
+                        @if (!string.IsNullOrWhiteSpace(skill.Description))
+                        {
+                            @(skill.Description)
+                        }
+                        else
+                        {
+                            <b>N/A</b>
+                        }
+                    </p>
+                </div>
+            </section>
+        </div>
+        <div class="col-12 col-md-7 col-lg-6 col-xl-5 mb-3">
+            <section>
+                <div class="row mb-3">
+                    <h3 class="mt-0">Requirements</h3>
+                    <SkillRequirements skills=@([skill]) />
+                </div>
+                <div class="row">
+                    <h3>Upgrade Path</h3>
+                    <SkillUpgradePath upgradeGroup=@(upgradeGroup) currentSkill=@(skill) />
+                </div>
+            </section>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required Services.Skill? skill { get; set; }
+
+    [Parameter]
+    public required Services.Combination[]? upgradeGroup { get; set; }
+
+    private bool dataLoaded => (skill is not null);
+}

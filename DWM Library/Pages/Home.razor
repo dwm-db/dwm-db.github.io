@@ -1,0 +1,97 @@
+﻿@page "/"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Home</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12">DWM Library</h1>
+            <div id="Intro" class="col-12">
+                <p>
+                    Welcome to the breed database for Dragon Warrior: Monsters 2.
+                    <br />
+                    Click any link to start.
+                </p>
+            </div>
+        </div>
+        <hr class="mb-5" />
+        <div class="row g-5">
+            <div class="col-12 col-lg-6">
+                <div class="row mb-5">
+                    <HeaderLink href=@($"/monster/family") text=@($"Monster Families") />
+                    <CardGrid href=@($"/monster/family") categories=@(typeof(Services.FamilyName).GetJsonStrings()) halfSize=true />
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="row mb-5">
+                    <HeaderLink href=@($"/monster/location") text=@($"Monster Locations") />
+                    <CardGrid href=@($"/monster/location") categories=@(typeof(Services.LocationType).GetJsonStrings()) halfSize=true />
+                </div>
+            </div>
+        </div>
+        <div class="row g-5">
+            <div class="col-12 col-lg-6">
+                <div class="row mb-5">
+                    <HeaderLink href=@($"/monster/size") text=@($"Monster Sizes") />
+                    <CardGrid href=@($"/monster/size") categories=@(typeof(Services.MonsterSize).GetJsonStrings()) halfSize=true />
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="row mb-5">
+                    <HeaderLink href=@($"/monster/rarity") text=@($"Monster Rarities") />
+                    <CardGrid href=@($"/monster/rarity") categories=@(typeof(Services.MonsterRarity).GetJsonStrings()) halfSize=true />
+                </div>
+            </div>
+        </div>
+        <div class="row g-5">
+            <div class="col-12 col-lg-6">
+                <div class="row mb-5">
+                    <HeaderLink href=@($"/skill/type") text=@($"Skill Types") />
+                    <CardGrid href=@($"/skill/type") categories=@(typeof(Services.SkillType).GetJsonStrings()) halfSize=true />
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="row mb-5">
+                    <HeaderLink href=@($"/skill/category") text=@($"Skill Categories") />
+                    <CardGrid href=@($"/skill/category") categories=@(typeof(Services.SkillCategory).GetJsonStrings()) halfSize=true />
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <HeaderLink href=@($"/skill/attribute") text=@($"Skill Attributes") />
+            <CardGrid href=@($"/skill/attribute") categories=@(typeof(Services.SkillAttribute).GetJsonStrings()) halfSize=false />
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <span style="font-size: .9rem; font-weight: lighter; font-style: italic; color: var(--bs-tertiary-color);">
+                    Monsters: @(monsters!.Length) &nbsp;&nbsp;|&nbsp;&nbsp; Breeds: @(breeds!.Length) &nbsp;&nbsp;|&nbsp;&nbsp; Skills: @(skills!.Length)
+                </span>
+            </div>
+        </div>
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    private bool dataLoaded => (breeds is not null && breeds.Length > 0 && monsters is not null && monsters.Length > 0 && skills is not null && skills.Length > 0);
+    private bool notFound = false;
+
+    private Services.Breed[]? breeds;
+    private Services.Monster[]? monsters;
+    private Services.Skill[]? skills;
+
+    protected override async Task OnInitializedAsync()
+    {
+        breeds = await DataService.GetBreedsAsync();
+        monsters = await DataService.GetMonstersAsync();
+        skills = await DataService.GetSkillsAsync();
+
+        notFound = (breeds is null || monsters is null || skills is null);
+    }
+}

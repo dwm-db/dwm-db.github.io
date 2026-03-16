@@ -1,0 +1,28 @@
+﻿@if (dataLoaded)
+{
+    <div id="MonsterList" class="row BigList g-3">
+        @foreach (var monster in monsters!)
+        {
+            <div class=@(css)>
+                <div class="card bg-body-tertiary text-center p-2">
+                    <div id="MonsterPic" style=@($"height: 48px; background-image: url(/pics/1x/{monster!.Name.ToLower()}.png); background-repeat: no-repeat; background-position: center;") />
+                    <a href=@($"/monster/{Uri.EscapeDataString(monster.Name)}") class="stretched-link mt-2">
+                        @(monster.Name)
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required Services.Monster[]? monsters { get; set; }
+
+    [Parameter]
+    public bool halfSize { get; set; } = false;
+
+    private bool dataLoaded => (monsters is not null && monsters.Length > 0);
+
+    private string css => (halfSize) ? "col-6 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-4" : "col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2";
+}

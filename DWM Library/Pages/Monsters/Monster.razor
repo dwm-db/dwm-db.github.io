@@ -1,0 +1,72 @@
+﻿@page "/monster/{monsterName}"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Monster - @monsterName</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12">@monster!.Name</h1>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <section>
+                    @* <h2>Monster Info</h2> *@
+                    <MonsterInfo monster=@(monster) />
+                </section>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-xl-4">
+                <section>
+                    <h2>Stats</h2>
+                </section>
+                <section>
+                    <h3>Growths</h3>
+                    <MonsterGrowths monsters=@([monster]) />
+                </section>
+                <section>
+                    <h3>Resistances</h3>
+                    <MonsterResistances monster=@(monster) halfSize=true />
+                </section>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <section>
+                    <MonsterBreeds breeds=@(breeds!.Where(b => string.Equals(b.Target.Name, monster!.Name, StringComparison.InvariantCultureIgnoreCase)).ToArray()) includeTargets=false />
+                </section>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <section>
+                    <MonsterBreeds breeds=@(breeds!.Where(b => !string.Equals(b.Target.Name, monster!.Name, StringComparison.InvariantCultureIgnoreCase)).ToArray()) includeTargets=true />
+                </section>
+            </div>
+        </div>
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    [Parameter]
+    public required string monsterName { get; set; }
+
+    private bool dataLoaded => (monster is not null && breeds is not null);
+    private bool notFound = false;
+
+    private Services.Monster? monster;
+    private Services.Breed[]? breeds;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var _monsterName = Uri.UnescapeDataString(monsterName);
+
+        monster = await DataService.GetMonsterByNameAsync(_monsterName);
+        breeds = (await DataService.GetBreedsByMonsterAsync(_monsterName)) ?? [];
+
+        notFound = (monster is null);
+    }
+}

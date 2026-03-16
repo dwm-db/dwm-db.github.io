@@ -1,0 +1,99 @@
+﻿<div class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <NavLink class="navbar-brand ms-1 me-3" href="" @onclick="CloseNavMenu">
+            <img src="/favicon.png" alt="Logo" class="d-inline-block align-text-top me-2" />
+            DWM Library
+        </NavLink>
+        <button class="navbar-toggler ms-3 me-1" type="button" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="@NavMenuCssClass navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <NavLink class="nav-link dropdown-toggle" href="monster" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Monsters
+                    </NavLink>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <NavLink class="dropdown-item" href="monster" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                All Monsters
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="monster/family" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                By Family
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="monster/location" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                By Location
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="monster/size" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                By Size
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="monster/rarity" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                By Rarity
+                            </NavLink>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <NavLink class="nav-link dropdown-toggle" href="skill" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Skills
+                    </NavLink>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <NavLink class="dropdown-item" href="skill" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                All Skills
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="skill/type" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                By Type
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="skill/category" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                By Category
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="skill/attribute" Match="NavLinkMatch.All" @onclick="CloseNavMenu">
+                                By Attribute
+                            </NavLink>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="about" @onclick="CloseNavMenu">
+                        About
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="json" @onclick="CloseNavMenu">
+                        Json
+                    </NavLink>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void CloseNavMenu()
+    {
+        collapseNavMenu = true;
+    }
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

@@ -1,0 +1,43 @@
+﻿<div class="SkillWithMonsters">
+    <div class="Skill">
+        @if (isCurrent)
+        {
+            <span class=@((isRelevant) ? "RelevantSkill" : "")>
+                @(skill.Name)
+            </span>
+        }
+        else
+        {
+            <a href=@($"/skill/{Uri.EscapeDataString(skill.Name)}") class=@((isRelevant) ? "RelevantSkill" : "")>
+                @(skill.Name)
+            </a>
+        }
+    </div>
+    @if (skill.Monsters is not null && skill.Monsters.Length > 0 && !isCurrent && showMonsters)
+    {
+        <ul class="SkillMonsterList">
+            @foreach (var monster in skill.Monsters)
+            {
+                <li>
+                    <a href=@($"/monster/{monster.Name}")>
+                        @(monster.Name)
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required Services.Skill skill { get; set; }
+
+    [Parameter]
+    public bool isCurrent { get; set; } = false;
+
+    [Parameter]
+    public bool isRelevant { get; set; } = false;
+
+    [Parameter]
+    public bool showMonsters { get; set; } = true;
+}

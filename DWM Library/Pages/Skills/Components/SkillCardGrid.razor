@@ -1,0 +1,22 @@
+﻿@if (dataLoaded)
+{
+    <div id="SkillList" class="row BigList align-content-center g-3">
+        @foreach (var skill in skills!)
+        {
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2">
+                <div class="card bg-body-tertiary text-center p-2">
+                    <a href=@($"/skill/{Uri.EscapeDataString(skill.Name)}") class="stretched-link">
+                        @(skill.Name)
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required Services.Skill[]? skills { get; set; }
+
+    private bool dataLoaded => (skills is not null && skills.Length > 0);
+}

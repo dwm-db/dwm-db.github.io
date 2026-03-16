@@ -1,0 +1,28 @@
+﻿.breadcrumb-bar {
+    color: var(--bs-emphasis-color);
+    background-color: var(--bs-primary-bg-subtle);
+}
+
+.breadcrumb-item {
+    font-size: 1rem;
+}
+
+    .breadcrumb-item ::deep a {
+        background-color: rgba(255,255,255,0.0);
+        text-decoration: none;
+    }
+
+        .breadcrumb-item ::deep a.active {
+            color: var(--bs-body-color);
+            background-color: rgba(255,255,255,0.0);
+            text-decoration: none;
+        }
+
+            .breadcrumb-item ::deep a.active:hover {
+                text-decoration: none;
+            }
+
+        .breadcrumb-item ::deep a:hover {
+            background-color: rgba(255,255,255,0.0);
+            text-decoration: underline;
+        }

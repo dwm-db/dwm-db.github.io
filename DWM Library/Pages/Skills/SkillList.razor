@@ -1,0 +1,137 @@
+﻿@page "/skill"
+@page "/skill/type"
+@page "/skill/category"
+@page "/skill/attribute"
+@implements IDisposable
+@inject IDataService DataService
+@inject NavigationManager NavigationManager
+
+<PageTitle>DWM Library - Skills</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12">Skills</h1>
+        </div>
+        <div class="row">
+            <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="skill" Match="NavLinkMatch.All">
+                        All Skills
+                    </NavLink>
+                </li>
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="skill/type" Match="NavLinkMatch.All">
+                        By Type
+                    </NavLink>
+                </li>
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="skill/category" Match="NavLinkMatch.All">
+                        By Category
+                    </NavLink>
+                </li>
+                <li class="nav-item px-1" role="presentation">
+                    <NavLink class="nav-link" href="skill/attribute" Match="NavLinkMatch.All">
+                        By Attribute
+                    </NavLink>
+                </li>
+            </ul>
+        </div>
+        <hr class="mb-5" />
+        <div class="row tab-content">
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.ALL))" role="tabpanel">
+                <SkillCardGrid skills=@(skills!.OrderBy(skill => skill.Name).ToArray()) />
+            </div>
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.TYPE))" role="tabpanel">
+                @foreach (var skillType in Enum.GetValues<Services.SkillType>())
+                {
+                    <div class="row mb-5">
+                        <HeaderLink href=@($"/skill/type/{Uri.EscapeDataString(skillType.ToString())}") text=@($"{skillType.ToString()} Skills") />
+                        <SkillCardGrid skills=@(skills!.Where(skill => skill.Type == skillType).OrderBy(skill => skill.Id).ToArray()) />
+                    </div>
+                }
+            </div>
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.CATEGORY))" role="tabpanel">
+                @foreach (var skillCategory in Enum.GetValues<Services.SkillCategory>())
+                {
+                    <div class="row mb-5">
+                        <HeaderLink href=@($"/skill/category/{Uri.EscapeDataString(skillCategory.ToString())}") text=@($"{skillCategory.ToString()} Skills") />
+                        <SkillCardGrid skills=@(skills!.Where(skill => skill.Category == skillCategory).OrderBy(skill => skill.Id).ToArray()) />
+                    </div>
+                }
+            </div>
+            <div class="col-12 tab-pane fade @(IsShowActive(Tabs.ATTRIBUTE))" role="tabpanel">
+                @foreach (var skillAttr in Enum.GetValues<Services.SkillAttribute>())
+                {
+                    <div class="row mb-5">
+                        <HeaderLink href=@($"/skill/attribute/{Uri.EscapeDataString(skillAttr.ToString())}") text=@($"{skillAttr.ToString()} Skills") />
+                        <SkillCardGrid skills=@(skills!.Where(skill => skill.Attribute == skillAttr).OrderBy(skill => skill.Id).ToArray()) />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool dataLoaded => (skills is not null && skills.Length > 0);
+
+    private Tabs currentTab = Tabs.ALL;
+    private Services.Skill[]? skills;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to the event
+        NavigationManager.LocationChanged += LocationChanged;
+
+        skills = await DataService.GetSkillsAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        SwitchCurrentTab();
+    }
+
+    void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        string navigationMethod = e.IsNavigationIntercepted ? "HTML" : "code";
+        string location = e.Location;
+        SwitchCurrentTab(location);
+        StateHasChanged();
+    }
+
+    void SwitchCurrentTab(string? location = null)
+    {
+        if (location is null)
+            location = string.Empty;
+
+        currentTab = currentTab switch
+        {
+            var tab when (NavigationManager.Uri.EndsWith("/skill/type") || location.EndsWith("/skill/type")) => Tabs.TYPE,
+            var tab when (NavigationManager.Uri.EndsWith("/skill/category") || location.EndsWith("/skill/category")) => Tabs.CATEGORY,
+            var tab when (NavigationManager.Uri.EndsWith("/skill/attribute") || location.EndsWith("/skill/attribute")) => Tabs.ATTRIBUTE,
+            _ => Tabs.ALL
+
+        };
+    }
+
+    void IDisposable.Dispose()
+    {
+        // Unsubscribe from the event when our component is disposed
+        NavigationManager.LocationChanged -= LocationChanged;
+    }
+
+    private string IsShowActive(Tabs tab)
+    {
+        return (tab == currentTab) ? "show active" : string.Empty;
+    }
+
+    private enum Tabs
+    {
+        ALL,
+        TYPE,
+        CATEGORY,
+        ATTRIBUTE
+    }
+}

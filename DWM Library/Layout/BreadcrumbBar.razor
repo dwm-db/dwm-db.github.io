@@ -1,0 +1,22 @@
+﻿<div class="breadcrumb-bar">
+    <div class="container-fluid">
+        <ol class="breadcrumb py-1 px-2">
+            @if (Links is not null && Links.Length > 0)
+            {
+                @foreach (var link in Links)
+                {
+                    <li class="breadcrumb-item">
+                        <NavLink class="breadcrumb-item" href=@(link.Item1) Match="NavLinkMatch.All">
+                            @(link.Item2)
+                        </NavLink>
+                    </li>
+                }
+            }
+        </ol>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Tuple<string, string>[]? Links { get; set; }
+}

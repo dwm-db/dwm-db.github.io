@@ -1,0 +1,34 @@
+﻿@inject IDataService DataService
+
+@if (dataLoaded)
+{
+    <div class="Combination">
+        <SkillWithMonsters skill=@(skill) isCurrent=@(skill.Id == currentSkill.Id) />
+        <div class="Operator">=</div>
+        @foreach (var s in combo!.CombinesFrom!.Index())
+        {
+            <SkillDetailColumn skill=@(s.Item) currentSkill=@(currentSkill) />
+            @if (s.Index < combo.CombinesFrom!.Length - 1)
+            {
+                <div class="Operator">+</div>
+            }
+        }
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public required Services.Skill skill { get; set; }
+
+    [Parameter]
+    public required Services.Skill currentSkill { get; set; }
+
+    private bool dataLoaded => (combo is not null && combo.CombinesFrom is not null && combo.CombinesFrom.Length > 0);
+    private Services.Combination? combo;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        combo = await DataService.GetCombinationByNameAsync(skill.Name);
+    }
+}

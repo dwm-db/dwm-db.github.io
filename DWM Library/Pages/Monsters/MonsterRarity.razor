@@ -1,0 +1,53 @@
+﻿@page "/monster/rarity/{rarityName}"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Rarity - @(Uri.UnescapeDataString(rarityName))</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12">@(Uri.UnescapeDataString(rarityName)) Monsters</h1>
+            <MonsterCardGrid monsters=@(monsters!.OrderBy(skill => skill.Id).ToArray()) />
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <section>
+                    <h2>Growths</h2>
+                    <MonsterGrowths monsters=@(monsters) includeNames=true />
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section>
+                    <MonsterBreeds breeds=@(breeds) includeTargets=true />
+                </section>
+            </div>
+        </div>
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    [Parameter]
+    public required string rarityName { get; set; }
+
+    private bool dataLoaded => (monsters is not null && breeds is not null);
+    private bool notFound = false;
+
+    private Services.Monster[]? monsters;
+    private Services.Breed[]? breeds;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var _rarityName = Uri.UnescapeDataString(rarityName);
+
+        monsters = await DataService.GetMonstersByRarityAsync(_rarityName);
+        breeds = (await DataService.GetBreedsByRarityAsync(_rarityName)) ?? [];
+
+        notFound = (monsters is null);
+    }
+}

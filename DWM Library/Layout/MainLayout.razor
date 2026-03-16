@@ -1,0 +1,49 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+
+<main>
+    <nav class="fixed-top">
+        <NavigationBar />
+        <BreadcrumbBar Links="@breadcrumbLinks" />
+    </nav>
+    <article class="content">
+        <ErrorBoundary @ref="_errorBoundary">
+            <ChildContent>
+                @Body
+            </ChildContent>
+            <ErrorContent>
+                <NotFound />
+            </ErrorContent>
+        </ErrorBoundary>
+    </article>
+</main>
+
+@code {
+    private Tuple<string, string>[]? breadcrumbLinks;
+    private ErrorBoundary? _errorBoundary;
+
+    protected override void OnParametersSet()
+    {
+        _errorBoundary?.Recover();
+
+        GetBreadcrumbLinks();
+
+        base.OnParametersSet();
+    }
+
+    private void GetBreadcrumbLinks()
+    {
+        var currentUrl = NavigationManager.Uri;
+        var myUrl = currentUrl.Replace(NavigationManager.BaseUri, "");
+        var path = myUrl.Split('/');
+        var lastLink = new Tuple<string, string>(string.Empty, "Home".ToLower());
+
+        var count = 1;
+        breadcrumbLinks = [lastLink, .. path.Where(link => !string.IsNullOrWhiteSpace(link)).Select(link =>
+        {
+            count++;
+            lastLink = new Tuple<string, string>($"{lastLink.Item1}/{link}", Uri.UnescapeDataString(link));
+            return lastLink;
+        })];
+    }
+}

@@ -1,0 +1,48 @@
+﻿@if (dataLoaded)
+{
+    <table class="Growth">
+        <thead>
+            <tr>
+                @if (includeNames)
+                {
+                    <th>Name</th>
+                }
+                <th>Lvl</th>
+                <th>Hp</th>
+                <th>Mp</th>
+                <th>Atk</th>
+                <th>Def</th>
+                <th>Agl</th>
+                <th>Int</th>
+            </tr>
+        </thead>
+        @foreach (var skill in skills!)
+        {
+            <tr>
+                @if (includeNames)
+                {
+                    <td><a href=@($"/skill/{Uri.EscapeDataString(skill.Name)}")>@skill.Name</a></td>
+                }
+                <td>@skill.Requirements.LVL</td>
+                <td>@skill.Requirements.HP</td>
+                <td>@skill.Requirements.MP</td>
+                <td>@skill.Requirements.ATK</td>
+                <td>@skill.Requirements.DEF</td>
+                <td>@skill.Requirements.AGL</td>
+                <td>@skill.Requirements.INT</td>
+            </tr>
+        }
+        <tr>
+        </tr>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public required Services.Skill[]? skills { get; set; }
+
+    [Parameter]
+    public required bool includeNames { get; set; } = false;
+
+    private bool dataLoaded => (skills is not null && skills.Length > 0);
+}

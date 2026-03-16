@@ -1,0 +1,48 @@
+﻿@if (dataLoaded)
+{
+    <table class="Growth">
+        <thead>
+            <tr>
+                @if (includeNames)
+                {
+                    <th>Name</th>
+                }
+                <th>MaxLvl</th>
+                <th>Exp</th>
+                <th>Hp</th>
+                <th>Mp</th>
+                <th>Atk</th>
+                <th>Def</th>
+                <th>Agl</th>
+                <th>Int</th>
+            </tr>
+        </thead>
+        @foreach (var monster in monsters!)
+        {
+            <tr>
+                @if (includeNames)
+                {
+                    <td><a href=@($"/monster/{Uri.EscapeDataString(monster.Name)}")>@monster.Name</a></td>
+                }
+                <td>@monster.Growths.LVL</td>
+                <td>@monster.Growths.EXP</td>
+                <td>@monster.Growths.HP</td>
+                <td>@monster.Growths.MP</td>
+                <td>@monster.Growths.ATK</td>
+                <td>@monster.Growths.DEF</td>
+                <td>@monster.Growths.AGL</td>
+                <td>@monster.Growths.INT</td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    [Parameter]
+    public required Services.Monster[]? monsters { get; set; }
+
+    [Parameter]
+    public required bool includeNames { get; set; } = false;
+
+    private bool dataLoaded => (monsters is not null && monsters.Length > 0);
+}

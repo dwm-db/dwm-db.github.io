@@ -1,0 +1,77 @@
+﻿@page "/monster/location/{locationName}"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Location - @(Uri.UnescapeDataString(locationName))</PageTitle>
+
+@if (dataLoaded)
+{
+    <div class="container">
+        <div class="row mb-3">
+            <section>
+                <h1 class="col-12">@(Uri.UnescapeDataString(locationName))</h1>
+                <MonsterCardGrid monsters=@(GetMonstersForVersion(LocationVersion.Both)) />
+            </section>
+        </div>
+        <div class="row mb-3">
+            <section>
+                <h2 class="col-12">@(LocationVersion.Cobi.ToJsonString()) Exclusive</h2>
+                <MonsterCardGrid monsters=@(GetMonstersForVersion(LocationVersion.Cobi)) />
+            </section>
+        </div>
+        <div class="row mb-3">
+            <section>
+                <h2 class="col-12">@(LocationVersion.Tara.ToJsonString()) Exclusive</h2>
+                <MonsterCardGrid monsters=@(GetMonstersForVersion(LocationVersion.Tara)) />
+            </section>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <section>
+                    <h2>Growths</h2>
+                    <MonsterGrowths monsters=@(monsters) includeNames=true />
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section>
+                    <MonsterBreeds breeds=@(breeds) includeTargets=true />
+                </section>
+            </div>
+        </div>
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    [Parameter]
+    public required string locationName { get; set; }
+
+    private bool dataLoaded => (monsters is not null && breeds is not null);
+    private bool notFound = false;
+
+    private Services.Monster[]? monsters;
+    private Services.Breed[]? breeds;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var _locationName = Uri.UnescapeDataString(locationName);
+
+        monsters = await DataService.GetMonstersByLocationAsync(_locationName);
+        breeds = (await DataService.GetBreedsByLocationAsync(_locationName)) ?? [];
+
+        notFound = (monsters is null);
+    }
+
+    private Services.Monster[] GetMonstersForVersion(LocationVersion version)
+    {
+        return monsters!.Where(monster => {
+            return monster.Locations.Any(location =>
+                {
+                    return location.Version == version && string.Equals(location.Name.ToJsonString(), Uri.UnescapeDataString(locationName), StringComparison.InvariantCultureIgnoreCase);
+                });
+        }).OrderBy(monster => monster.Id).ToArray();
+    }
+}

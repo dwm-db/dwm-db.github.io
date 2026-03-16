@@ -1,0 +1,18 @@
+﻿<div class="SkillDetailRow">
+    @foreach (var s in upgradeGroup!.Index())
+    {
+        <SkillWithMonsters skill=@(s.Item.Skill) isCurrent=@(s.Item.Skill.Id == currentSkill.Id) showMonsters=false />
+        @if (s.Index < upgradeGroup!.Length - 1)
+        {
+            <div class="Operator">⟶</div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required Services.Combination[] upgradeGroup { get; set; }
+
+    [Parameter]
+    public required Services.Skill currentSkill { get; set; }
+}

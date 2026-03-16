@@ -1,0 +1,40 @@
+﻿@page "/Json"
+@inject IDataService DataService
+
+<PageTitle>DWM Library - Json</PageTitle>
+
+@if (dataLoaded && !notFound)
+{
+    <div class="container-fluid h-100">
+        <code>@(json)</code>
+    </div>
+}
+
+@if (notFound)
+{
+    <NotFound />
+}
+
+@code {
+    private bool dataLoaded => (data is not null);
+    private bool notFound => (json is null);
+
+    private LibraryData? data;
+    private string? json;
+
+    protected override async Task OnInitializedAsync()
+    {
+        data = await DataService.GetLibraryDataAsync();
+        if (data is null)
+            return;
+
+        try
+        {
+            json = System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions { WriteIndented = false, ReferenceHandler = ReferenceHandler.Preserve });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debugger.Break();
+        }
+    }
+}

@@ -1,0 +1,81 @@
+﻿@if (dataLoaded)
+{
+    <div class="row g-1">
+        @foreach (var attribute in Enum.GetValues<Services.SkillAttribute>().Where(attr => attr != Services.SkillAttribute.NONE))
+        {
+            <div class=@(css)>
+                <span style="font-weight: lighter; font-style: italic; color: var(--bs-secondary-color);">
+                    @(attribute.ToJsonString())
+                </span>
+                <br />
+                <span>
+                    @(ConvertAttribute(attribute))
+                </span>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required Services.Monster? monster { get; set; }
+
+    [Parameter]
+    public required bool includeNames { get; set; } = false;
+
+    [Parameter]
+    public bool halfSize { get; set; } = false;
+
+    private string css => (halfSize) ? "col-2 col-sm-2 col-md-3 col-lg-2 col-xl-2 col-xxl-2" : "col-2 col-sm-2 col-md-2 col-lg-1 col-xl-1 col-xxl-1";
+
+    private bool dataLoaded => (monster is not null);
+
+    private string ConvertAttribute(Services.SkillAttribute attribute)
+    {
+        if (monster is null)
+            return ConvertResistance(Services.ResistanceTier.NONE);
+
+        return attribute switch
+        {
+            Services.SkillAttribute.A => ConvertResistance(monster!.Resistances.A),
+            Services.SkillAttribute.B => ConvertResistance(monster!.Resistances.B),
+            Services.SkillAttribute.C => ConvertResistance(monster!.Resistances.C),
+            Services.SkillAttribute.D => ConvertResistance(monster!.Resistances.D),
+            Services.SkillAttribute.E => ConvertResistance(monster!.Resistances.E),
+            Services.SkillAttribute.F => ConvertResistance(monster!.Resistances.F),
+            Services.SkillAttribute.G => ConvertResistance(monster!.Resistances.G),
+            Services.SkillAttribute.H => ConvertResistance(monster!.Resistances.H),
+            Services.SkillAttribute.I => ConvertResistance(monster!.Resistances.I),
+            Services.SkillAttribute.J => ConvertResistance(monster!.Resistances.J),
+            Services.SkillAttribute.K => ConvertResistance(monster!.Resistances.K),
+            Services.SkillAttribute.L => ConvertResistance(monster!.Resistances.L),
+            Services.SkillAttribute.M => ConvertResistance(monster!.Resistances.M),
+            Services.SkillAttribute.N => ConvertResistance(monster!.Resistances.N),
+            Services.SkillAttribute.O => ConvertResistance(monster!.Resistances.O),
+            Services.SkillAttribute.P => ConvertResistance(monster!.Resistances.P),
+            Services.SkillAttribute.Q => ConvertResistance(monster!.Resistances.Q),
+            Services.SkillAttribute.R => ConvertResistance(monster!.Resistances.R),
+            Services.SkillAttribute.S => ConvertResistance(monster!.Resistances.S),
+            Services.SkillAttribute.T => ConvertResistance(monster!.Resistances.T),
+            Services.SkillAttribute.U => ConvertResistance(monster!.Resistances.U),
+            Services.SkillAttribute.V => ConvertResistance(monster!.Resistances.V),
+            Services.SkillAttribute.W => ConvertResistance(monster!.Resistances.W),
+            Services.SkillAttribute.X => ConvertResistance(monster!.Resistances.X),
+            Services.SkillAttribute.Y => ConvertResistance(monster!.Resistances.Y),
+            Services.SkillAttribute.Z => ConvertResistance(monster!.Resistances.Z),
+            Services.SkillAttribute.Æ => ConvertResistance(monster!.Resistances.Æ),
+            _ => ConvertResistance(Services.ResistanceTier.NONE)
+        };
+
+        string ConvertResistance(Services.ResistanceTier tier)
+        {
+            return tier switch
+            {
+                Services.ResistanceTier.IMMUNE => "★★★",
+                Services.ResistanceTier.STRONG => "★★☆",
+                Services.ResistanceTier.WEAK => "★☆☆",
+                _ => "☆☆☆",
+            };
+        }
+    }
+}
