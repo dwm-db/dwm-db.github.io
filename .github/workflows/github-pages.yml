@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: dwm-lib/'DWM Library'/publish/wwwroot
+          path: dwm-lib/DWM Library/publish/wwwroot
           
       - name: Deploy to GitHub Pages
         id: deployment
