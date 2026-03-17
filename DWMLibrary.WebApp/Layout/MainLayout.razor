@@ -2,12 +2,12 @@
 @inject NavigationManager NavigationManager
 
 <main>
-    <nav class="fixed-top">
+    <header class="fixed-top">
         <CascadingValue Value="@collapseNavMenu">
             <NavigationBar OnClickCallback=@HandleChildClicks />
             <BreadcrumbBar Links="@breadcrumbLinks" OnClickCallback=@HandleChildClicks />
         </CascadingValue>
-    </nav>
+    </header>
     <article class="content">
         @if (!collapseNavMenu)
         {

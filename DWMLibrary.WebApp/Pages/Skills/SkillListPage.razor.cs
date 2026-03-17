@@ -1,68 +1,66 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
-namespace DWMLibrary.WebApp.Pages.Skills
+namespace DWMLibrary.WebApp.Pages.Skills;
+
+public partial class SkillListPage : IDisposable
 {
-    public partial class SkillListPage
+    private bool dataLoaded => (skills is not null && skills.Length > 0);
+
+    private Tabs currentTab = Tabs.ALL;
+    private Skill[]? skills;
+
+    protected override async Task OnInitializedAsync()
     {
-        private bool dataLoaded => (skills is not null && skills.Length > 0);
+        // Subscribe to the event
+        NavigationManager.LocationChanged += LocationChanged;
 
-        private Tabs currentTab = Tabs.ALL;
-        private Skill[]? skills;
+        skills = await DataService.GetSkillsAsync();
+    }
 
-        protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
+    {
+        SwitchCurrentTab();
+    }
+
+    void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        string navigationMethod = e.IsNavigationIntercepted ? "HTML" : "code";
+        string location = e.Location;
+        SwitchCurrentTab(location);
+        StateHasChanged();
+    }
+
+    void SwitchCurrentTab(string? location = null)
+    {
+        location ??= string.Empty;
+
+        currentTab = currentTab switch
         {
-            // Subscribe to the event
-            NavigationManager.LocationChanged += LocationChanged;
+            _ when (NavigationManager.Uri.EndsWith("/skill/type") || location.EndsWith("/skill/type")) => Tabs.TYPE,
+            _ when (NavigationManager.Uri.EndsWith("/skill/category") || location.EndsWith("/skill/category")) => Tabs.CATEGORY,
+            _ when (NavigationManager.Uri.EndsWith("/skill/attribute") || location.EndsWith("/skill/attribute")) => Tabs.ATTRIBUTE,
+            _ => Tabs.ALL
 
-            skills = await DataService.GetSkillsAsync();
-        }
+        };
+    }
 
-        protected override void OnParametersSet()
-        {
-            SwitchCurrentTab();
-        }
+    void IDisposable.Dispose()
+    {
+        // Unsubscribe from the event when our component is disposed
+        NavigationManager.LocationChanged -= LocationChanged;
+    }
 
-        void LocationChanged(object? sender, LocationChangedEventArgs e)
-        {
-            string navigationMethod = e.IsNavigationIntercepted ? "HTML" : "code";
-            string location = e.Location;
-            SwitchCurrentTab(location);
-            StateHasChanged();
-        }
+    private string IsShowActive(Tabs tab)
+    {
+        return (tab == currentTab) ? "show active" : string.Empty;
+    }
 
-        void SwitchCurrentTab(string? location = null)
-        {
-            if (location is null)
-                location = string.Empty;
-
-            currentTab = currentTab switch
-            {
-                var tab when (NavigationManager.Uri.EndsWith("/skill/type") || location.EndsWith("/skill/type")) => Tabs.TYPE,
-                var tab when (NavigationManager.Uri.EndsWith("/skill/category") || location.EndsWith("/skill/category")) => Tabs.CATEGORY,
-                var tab when (NavigationManager.Uri.EndsWith("/skill/attribute") || location.EndsWith("/skill/attribute")) => Tabs.ATTRIBUTE,
-                _ => Tabs.ALL
-
-            };
-        }
-
-        void IDisposable.Dispose()
-        {
-            // Unsubscribe from the event when our component is disposed
-            NavigationManager.LocationChanged -= LocationChanged;
-        }
-
-        private string IsShowActive(Tabs tab)
-        {
-            return (tab == currentTab) ? "show active" : string.Empty;
-        }
-
-        private enum Tabs
-        {
-            ALL,
-            TYPE,
-            CATEGORY,
-            ATTRIBUTE
-        }
+    private enum Tabs
+    {
+        ALL,
+        TYPE,
+        CATEGORY,
+        ATTRIBUTE
     }
 }

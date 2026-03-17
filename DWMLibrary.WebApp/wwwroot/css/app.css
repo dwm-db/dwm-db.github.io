@@ -1,13 +1,10 @@
 body {
-    font-family: Lato, "Helvetica Neue", "Helvetica", Arial, sans-serif;
+    /*font-family: Lato, "Helvetica Neue", "Helvetica", Arial, sans-serif;*/
+    font-family: var(--bs-body-font-family);
     font-size: 18px;
     line-height: 1.4;
     color: var(--bs-body-color);
     background-color: var(--bs-body-bg);
-}
-
-nav {
-    margin-bottom: 2rem;
 }
 
 article {
@@ -73,7 +70,7 @@ h4, h5, h6, .h4, .h5, .h6 {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-weight: 300;
+    font-weight: bold;
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
