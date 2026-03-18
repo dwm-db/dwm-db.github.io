@@ -19,7 +19,7 @@ namespace DWMLibrary.WebApp.Pages.Monsters
             if (Enum.IsDefined(typeof(MonsterRarity), RarityName) || Enum.IsDefined(typeof(MonsterRarity), int.Parse(RarityName)))
             {
                 var _rarity = Enum.Parse<MonsterRarity>(RarityName);
-                RarityName = ((double)((int)_rarity / 2)).ToString("0.0") + " Star";
+                RarityName = _rarity.ToJsonString();
                 monsters = await DataService.GetMonstersByRarityAsync(_rarity);
                 breeds = (await DataService.GetBreedsByRarityAsync(_rarity)) ?? [];
             }

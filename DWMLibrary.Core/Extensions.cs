@@ -38,15 +38,16 @@ public static class Extensions
         Tuple<string, string>[] values = [];
         foreach (var field in fieldInfo.Where(field => !field.IsSpecialName))
         {
-            if (type.IsEnum && type.Name == nameof(MonsterRarity) && type.IsEnumDefined(field.Name))
-            {
-                int enumValue = (int)Enum.Parse(type, field.Name);
-                values = [.. values, new Tuple<string, string>(enumValue.ToString(), field.GetJsonAttribute())];
-            }
-            else
-            {
-                values = [.. values, new Tuple<string, string>(field.Name, field.GetJsonAttribute())];
-            }
+            //if (type.IsEnum && type.Name == nameof(MonsterRarity) && type.IsEnumDefined(field.Name))
+            //{
+            //    int enumValue = (int)Enum.Parse(type, field.Name);
+            //    values = [.. values, new Tuple<string, string>(enumValue.ToString(), field.GetJsonAttribute())];
+            //}
+            //else
+            //{
+            //    values = [.. values, new Tuple<string, string>(field.Name, field.GetJsonAttribute())];
+            //}
+            values = [.. values, new Tuple<string, string>(field.Name, field.GetJsonAttribute())];
         }
 
         return values;

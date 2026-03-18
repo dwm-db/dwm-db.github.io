@@ -81,21 +81,21 @@ public enum MonsterRarity
     [JsonStringEnumMemberName("☆☆☆☆")]
     NONE,
     [JsonStringEnumMemberName("⯪☆☆☆")]
-    RARITY_0_5,
+    Basic,
     [JsonStringEnumMemberName("★☆☆☆")]
-    RARITY_1_0,
+    Common,
     [JsonStringEnumMemberName("★⯪☆☆")]
-    RARITY_1_5,
+    Uncommon,
     [JsonStringEnumMemberName("★★☆☆")]
-    RARITY_2_0,
+    Rare,
     [JsonStringEnumMemberName("★★⯪☆")]
-    RARITY_2_5,
+    SuperRare,
     [JsonStringEnumMemberName("★★★☆")]
-    RARITY_3_0,
+    Epic,
     [JsonStringEnumMemberName("★★★⯪")]
-    RARITY_3_5,
+    Legendary,
     [JsonStringEnumMemberName("★★★★")]
-    RARITY_4_0
+    Mythic
 }
 
 public sealed record MonsterGrowths

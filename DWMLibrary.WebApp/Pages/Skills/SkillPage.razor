@@ -1,7 +1,7 @@
-﻿@page "/skill/{skillName}"
+﻿@page "/skill/{SkillName}"
 @inject IDataService DataService
 
-<PageTitle>DWM Library - Skill - @skillName</PageTitle>
+<PageTitle>DWM Library - Skill - @(SkillName)</PageTitle>
 
 @if (dataLoaded)
 {

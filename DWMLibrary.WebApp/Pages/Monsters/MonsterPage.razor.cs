@@ -5,7 +5,7 @@ namespace DWMLibrary.WebApp.Pages.Monsters
     public partial class MonsterPage
     {
         [Parameter]
-        public required string monsterName { get; set; }
+        public required string MonsterName { get; set; }
 
         private bool dataLoaded => (monster is not null && breeds is not null);
         private bool notFound = false;
@@ -15,10 +15,10 @@ namespace DWMLibrary.WebApp.Pages.Monsters
 
         protected override async Task OnParametersSetAsync()
         {
-            monsterName = Uri.UnescapeDataString(monsterName);
+            MonsterName = Uri.UnescapeDataString(MonsterName);
 
-            monster = await DataService.GetMonsterByNameAsync(monsterName);
-            breeds = (await DataService.GetBreedsByMonsterAsync(monsterName)) ?? [];
+            monster = await DataService.GetMonsterByNameAsync(MonsterName);
+            breeds = (await DataService.GetBreedsByMonsterAsync(MonsterName)) ?? [];
 
             notFound = (monster is null);
         }

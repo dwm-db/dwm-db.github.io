@@ -37,12 +37,10 @@ public partial class MainLayout
     private void HandleFadeClick()
     {
         collapseNavMenu = true;
-        //StateHasChanged();
     }
 
     private void HandleChildClicks(bool value)
     {
         collapseNavMenu = value;
-        //StateHasChanged();
     }
 }

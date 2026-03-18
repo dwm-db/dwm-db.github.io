@@ -5,7 +5,7 @@ namespace DWMLibrary.WebApp.Pages.Skills
     public partial class SkillPage
     {
         [Parameter]
-        public required string skillName { get; set; }
+        public required string SkillName { get; set; }
 
         private bool dataLoaded => (skill is not null);
         private bool notFound = false;
@@ -15,10 +15,10 @@ namespace DWMLibrary.WebApp.Pages.Skills
 
         protected override async Task OnParametersSetAsync()
         {
-            skillName = Uri.UnescapeDataString(skillName);
+            SkillName = Uri.UnescapeDataString(SkillName);
 
-            skill = await DataService.GetSkillByNameAsync(skillName);
-            upgradeGroup = (await DataService.GetSkillsByUpgradeGroupAsync(skillName)) ?? [];
+            skill = await DataService.GetSkillByNameAsync(SkillName);
+            upgradeGroup = (await DataService.GetSkillsByUpgradeGroupAsync(SkillName)) ?? [];
 
             notFound = (skill is null);
         }
