@@ -58,10 +58,10 @@ public partial class MonsterResistancesComponent
         {
             return tier switch
             {
-                MonsterResistanceTier.IMMUNE => "★★★",
-                MonsterResistanceTier.STRONG => "★★☆",
-                MonsterResistanceTier.WEAK => "★☆☆",
-                _ => "☆☆☆",
+                MonsterResistanceTier.IMMUNE => "\uF586 \uF586 \uF586",
+                MonsterResistanceTier.STRONG => "\uF586 \uF586 \uF588",
+                MonsterResistanceTier.WEAK => "\uF586 \uF588 \uF588",
+                _ => "\uF588 \uF588 \uF588",
             };
         }
     }
