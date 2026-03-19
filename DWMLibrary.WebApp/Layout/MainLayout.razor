@@ -1,14 +1,14 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 
-<main>
+<main class="d-flex flex-column min-vh-100">
     <header class="fixed-top">
         <CascadingValue Value="@collapseNavMenu">
             <NavigationBar OnClickCallback=@HandleChildClicks />
             <BreadcrumbBar Links="@breadcrumbLinks" OnClickCallback=@HandleChildClicks />
         </CascadingValue>
     </header>
-    <article class="content">
+    <article class="flex-grow-1 content">
         @if (!collapseNavMenu)
         {
             <div class="overlay" @onclick="HandleFadeClick" />
@@ -22,7 +22,7 @@
             </ErrorContent>
         </ErrorBoundary>
     </article>
-    <footer>
+    <footer class="mt-auto">
         <StatisticsBar />
     </footer>
 </main>

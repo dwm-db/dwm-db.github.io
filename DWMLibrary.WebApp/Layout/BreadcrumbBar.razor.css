@@ -1,7 +1,7 @@
 ﻿.breadcrumb-bar {
     min-height: 2rem;
-    color: var(--bs-secondary-color);
-    background-color: var(--bs-secondary-bg);
+    color: var(--bs-emphasis-color);
+    background-color: var(--bs-primary-bg-subtle);
 }
 
 .breadcrumb-item {
@@ -20,6 +20,7 @@
         }
 
             .breadcrumb-item ::deep a.active:hover {
+                background-color: rgba(255,255,255,0.0);
                 text-decoration: none;
             }
 

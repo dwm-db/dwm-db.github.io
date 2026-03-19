@@ -4,13 +4,14 @@
         @foreach (var attribute in Enum.GetValues<SkillAttribute>().Where(attr => attr != SkillAttribute.NONE))
         {
             <div class=@(css)>
-                <span style="font-weight: lighter; font-style: italic; color: var(--bs-secondary-color);">
-                    @(attribute.ToJsonString())
-                </span>
-                <br />
-                <span style="font-size: 0.75em;">
-                    @(ConvertAttribute(attribute))
-                </span>
+                <div class="card border-0 p-1">
+                    <a href=@($"/skill/attribute/{Uri.EscapeDataString(attribute.ToString())}") class="stretched-link" style="font-weight: lighter; font-style: italic; color: var(--bs-secondary-color);">
+                        @(attribute.ToJsonString())
+                    </a>
+                    <span style="font-size: 0.75em;">
+                        @(ConvertAttribute(attribute))
+                    </span>
+                </div>
             </div>
         }
     </div>

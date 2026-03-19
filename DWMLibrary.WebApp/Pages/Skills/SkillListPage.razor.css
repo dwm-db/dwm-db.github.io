@@ -1,0 +1,26 @@
+﻿.nav-item ::deep a {
+    text-decoration: none;
+    transition: border-color 0.3s ease;
+}
+
+    .nav-item ::deep a.active {
+        color: var(--bs-white);
+        background-color: var(--bs-primary);
+        text-decoration: none;
+    }
+
+        .nav-item ::deep a.active:hover {
+            color: var(--bs-white);
+            background-color: var(--bs-primary);
+            text-decoration: none;
+        }
+
+    .nav-item ::deep a:hover {
+        color: var(--bs-link-hover-color);
+        background-color: rgba(var(--bs-link-color-rgb),0.1);
+        text-decoration: underline;
+    }
+
+    .nav-item ::deep a.show {
+        text-decoration: none;
+    }

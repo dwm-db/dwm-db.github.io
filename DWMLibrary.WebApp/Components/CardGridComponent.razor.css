@@ -1,0 +1,15 @@
+﻿.card {
+    transition: border-color 0.3s ease;
+}
+
+    .card.active {
+        border-color: var(--bs-link-color);
+    }
+
+        .card.active:hover {
+            border-color: var(--bs-link-hover-color);
+        }
+
+    .card:hover {
+        border-color: var(--bs-link-hover-color);
+    }

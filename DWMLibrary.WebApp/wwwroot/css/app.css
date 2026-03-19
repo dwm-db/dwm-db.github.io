@@ -7,14 +7,6 @@ body {
     width: 100%;
 }
 
-header {
-    margin-bottom: 2rem;
-}
-
-article {
-    margin-bottom: 2rem;
-}
-
 a {
     color: var(--bs-link-color);
     text-decoration: none;

@@ -1,5 +1,14 @@
-.content {
-    padding-top: 10rem;
+header {
+    margin-bottom: 1rem;
+}
+
+article {
+    padding-top: 7.5rem;
+    padding-bottom: 5rem;
+}
+
+footer {
+    margin-top: 1rem;
 }
 
 .overlay {
