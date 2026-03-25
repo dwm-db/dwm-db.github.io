@@ -18,8 +18,8 @@
 
             .breadcrumb-item ::deep a.active:hover, .breadcrumb-item ::deep a.active:focus {
                 color: var(--bs-emphasis-color);
-                background-color: rgba(var(--bs-link-hover-color-rgb),0.125);
-                text-decoration: underline;
+                background-color: rgba(255,255,255,0.0);
+                text-decoration: none;
             }
 
         .breadcrumb-item ::deep a:hover, .breadcrumb-item ::deep a:focus {

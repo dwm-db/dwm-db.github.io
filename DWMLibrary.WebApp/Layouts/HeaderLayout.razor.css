@@ -1,9 +1,9 @@
 ﻿.navbar {
-    color: var(--bs-white);
-    background-color: var(--bs-primary);
+    --bs-navbar-color: var(--bs-white);
+    height: 3.25rem;
 }
 
-    .navbar ::deep a {
+    .navbar ::deep a, .offcanvas ::deep a {
         color: var(--bs-white);
         background-color: rgba(255,255,255,0.0);
         text-decoration: none;
@@ -11,58 +11,60 @@
         transition: background-color 0.125s ease-in-out;
     }
 
-        .navbar ::deep a.active {
+        .navbar ::deep a.active, .offcanvas ::deep a.active {
             color: var(--bs-white);
             background-color: rgba(255,255,255,0.0);
             text-decoration: none;
         }
 
-            .navbar ::deep a.active:hover, .navbar ::deep a.active:focus {
+            .navbar ::deep a.active:hover, .navbar ::deep a.active:focus,
+            .offcanvas ::deep a.active:hover, .offcanvas ::deep a.active:focus {
                 color: var(--bs-white);
                 background-color: rgba(255,255,255,0.0);
                 text-decoration: none;
             }
 
-        .navbar ::deep a:hover, .navbar ::deep a:focus {
+        .navbar ::deep a:hover, .navbar ::deep a:focus,
+        .offcanvas ::deep a:hover, .offcanvas ::deep a:focus {
             color: var(--bs-white);
             background-color: rgba(255,255,255,0.0);
             text-decoration: none;
         }
 
-        .navbar ::deep a.show {
+        .navbar ::deep a.show, .offcanvas ::deep a.show {
             color: var(--bs-white);
             background-color: rgba(255,255,255,0.0);
             text-decoration: none;
         }
 
-.navbar-brand b {
+.navbar-brand ::deep b, .offcanvas-header ::deep b {
+    color: var(--bs-white);
     font-size: 1.5rem;
 }
 
-    .navbar-brand img {
-        object-fit: scale-down;
-    }
+.navbar-brand ::deep img, .offcanvas-header ::deep img {
+    object-fit: scale-down;
+}
 
 .navbar-toggler {
-    color: var(--bs-white);
-    border-color: rgba(255,255,255,0.15);
+    color: rgba(var(--bs-white-rgb),0.75);
+    --bs-navbar-toggler-font-size: 1.5rem;
+    --bs-navbar-toggler-border-color: rgba(255,255,255,0.0);
+    --bs-navbar-toggler-focus-width: 0;
+    --bs-navbar-toggler-transition: color 0.125s ease-in-out;
 }
 
-.navbar-toggler-icon {
-    color: var(--bs-white);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
+    .navbar-toggler:hover, .navbar-toggler:focus, .navbar-toggler:focus-visible, .navbar-toggler:focus-within {
+        color: var(--bs-white);
+    }
 
-.navbar-overlay {
-    position: fixed;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    opacity: 0.50;
-}
+    .navbar-toggler i {
+        font-size: 2.0rem;
+    }
+
+    .navbar-toggler i.bi-x-lg {
+        font-size: 1.5rem;
+    }
 
 .dropdown-menu {
     color: var(--bs-body-color);
@@ -105,3 +107,10 @@
             color: var(--bs-white);
             text-decoration: none;
         }
+
+.offcanvas {
+    color: var(--bs-white);
+    --bs-offcanvas-color: var(--bs-white);
+    --bs-offcanvas-width: 100%;
+    --bs-offcanvas-height: fit-content;
+}

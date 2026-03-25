@@ -8,7 +8,6 @@ public partial class FooterLayout
         { "Families", "monster/family" },
         { "Locations", "monster/location" },
         { "Skills", "skill" },
-        { "About", "about" },
         { "Json", "json" }
     };
 }

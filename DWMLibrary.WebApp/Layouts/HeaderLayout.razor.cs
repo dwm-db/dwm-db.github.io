@@ -7,8 +7,6 @@ public partial class HeaderLayout
         { "Monsters", "monster" },
         { "Families", "monster/family" },
         { "Locations", "monster/location" },
-        { "Skills", "skill" },
-        { "About", "about" },
-        { "Json", "json" }
+        { "Skills", "skill" }
     };
 }
