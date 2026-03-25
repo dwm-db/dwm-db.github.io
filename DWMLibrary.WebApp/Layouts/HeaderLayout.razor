@@ -1,9 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
-<nav class="navbar navbar-expand-md bg-primary bg-gradient">
+<nav class="navbar navbar-expand-md bg-primary bg-gradient flex-nowrap py-2">
     <div class="container">
         <NavLink class="navbar-brand p-0" href="" Match="NavLinkMatch.All">
-            <span class="d-flex flex-row align-items-center align-content-center w-100 h-100">
+            <span class="d-inline-flex flex-row align-items-center align-content-center w-100 h-100">
                 <img class="img-fluid pt-1" src="/img/2x/wonderegg-2x.png" draggable="false" alt="Logo" width="32" height="36" />
                 <b class="d-block p-0 ms-3 text-center" style="font-size: 1.5rem;">WonderEgg</b>
             </span>
@@ -20,15 +20,15 @@
                 }
             </ul>
         </div>
-        <button class="navbar-toggler border-0 p-0 ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target=".offcanvas">
+        <button class="navbar-toggler border-0 ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target=".offcanvas">
             <i class="bi bi-chevron-down"></i>
         </button>
     </div>
 </nav>
-<nav class="offcanvas offcanvas-top bg-primary bg-gradient py-2" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1">
+<nav class="offcanvas offcanvas-top bg-primary bg-gradient flex-nowrap py-2" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1">
     <div class="container">
         <NavLink class="navbar-brand p-0 mb-2" href="" Match="NavLinkMatch.All">
-            <span class="d-flex flex-row align-items-center align-content-center w-100 h-100" data-bs-dismiss="offcanvas" data-bs-target=".offcanvas">
+            <span class="d-inline-flex flex-row align-items-center align-content-center w-100 h-100" data-bs-dismiss="offcanvas" data-bs-target=".offcanvas">
                 <img class="img-fluid pt-1" src="/img/2x/wonderegg-2x.png" draggable="false" alt="Logo" width="32" height="36" />
                 <b class="d-block p-0 ms-3 text-center" style="font-size: 1.5rem;">WonderEgg</b>
             </span>
@@ -45,10 +45,8 @@
                 </li>
             }
         </ul>
-        <span class="d-flex flex-row justify-content-end mt-2">
-            <button class="navbar-toggler border-0 p-0 ms-auto" type="button" data-bs-dismiss="offcanvas" data-bs-target=".offcanvas">
-                <i class="bi bi-chevron-up"></i>
-            </button>
-        </span>
+        <button class="navbar-toggler border-0 w-100" type="button" data-bs-dismiss="offcanvas" data-bs-target=".offcanvas">
+            <i class="bi bi-chevron-up text-end"></i>
+        </button>
     </div>
 </nav>

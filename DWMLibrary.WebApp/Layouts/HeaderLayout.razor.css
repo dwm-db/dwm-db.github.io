@@ -47,15 +47,19 @@
 }
 
 .navbar-toggler {
-    color: rgba(var(--bs-white-rgb),0.75);
+    color: var(--bs-white);
+    background-color: rgba(255,255,255,0.0);
+    border-radius: 4px;
+    transition: background-color 0.125s ease-in-out;
     --bs-navbar-toggler-font-size: 1.5rem;
     --bs-navbar-toggler-border-color: rgba(255,255,255,0.0);
     --bs-navbar-toggler-focus-width: 0;
-    --bs-navbar-toggler-transition: color 0.125s ease-in-out;
+    --bs-navbar-toggler-transition: background-color 0.125s ease-in-out;
 }
 
-    .navbar-toggler:hover, .navbar-toggler:focus, .navbar-toggler:focus-visible, .navbar-toggler:focus-within {
+    .navbar-toggler:hover {
         color: var(--bs-white);
+        background-color: rgba(255,255,255,0.125);
     }
 
     .navbar-toggler i {
