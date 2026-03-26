@@ -37,14 +37,29 @@
             text-decoration: none;
         }
 
-.navbar-brand ::deep b, .offcanvas-header ::deep b {
+.navbar-brand, .offcanvas-header {
     color: var(--bs-white);
-    font-size: 1.5rem;
 }
 
-.navbar-brand ::deep img, .offcanvas-header ::deep img {
-    object-fit: scale-down;
+.brand-logo {
+    color: var(--bs-white);
 }
+
+    .brand-logo > b {
+        color: var(--bs-white);
+        font-size: 1.5rem;
+    }
+
+    .brand-logo > img {
+        object-fit: scale-down;
+        transform-origin: center;
+        transition: transform 0.5s ease-in-out;
+        transform: rotate(0deg);
+    }
+
+    .brand-logo:hover > img {
+        transform: rotate(-25deg) scale(1.125);
+    }
 
 .navbar-toggler {
     color: var(--bs-white);
@@ -66,9 +81,9 @@
         font-size: 2.0rem;
     }
 
-    .navbar-toggler i.bi-x-lg {
-        font-size: 1.5rem;
-    }
+        .navbar-toggler i.bi-x-lg {
+            font-size: 1.5rem;
+        }
 
 .dropdown-menu {
     color: var(--bs-body-color);

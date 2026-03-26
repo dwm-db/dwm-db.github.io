@@ -4,29 +4,35 @@
 
 <PageTitle>WonderEgg - Location - @(LocationName)</PageTitle>
 
-@if (dataLoaded)
-{
-    <div class="container">
-        <div class="row">
-            <h1 class="col-12">@(LocationName)</h1>
-        </div>
-        <div class="row mb-3">
-            <section>
-                <MonsterCardGridComponent monsters=@(GetMonstersForVersion(MonsterLocationVersion.Both)) />
-            </section>
-        </div>
+<div class="container">
+    <div class="row">
+        <h1 class="col-12">@(LocationName)</h1>
+    </div>
+    <div class="row mb-3">
+        <section>
+            <MonsterCardGridComponent monsters=@(GetMonstersForVersion(MonsterLocationVersion.Both)) />
+        </section>
+    </div>
+    @if (GetMonstersForVersion(MonsterLocationVersion.Cobi) is not null)
+    {
         <div class="row mb-3">
             <section>
                 <h2 class="col-12">@(MonsterLocationVersion.Cobi.ToJsonString()) Exclusive</h2>
                 <MonsterCardGridComponent monsters=@(GetMonstersForVersion(MonsterLocationVersion.Cobi)) />
             </section>
         </div>
+    }
+    @if (GetMonstersForVersion(MonsterLocationVersion.Tara) is not null)
+    {
         <div class="row mb-3">
             <section>
                 <h2 class="col-12">@(MonsterLocationVersion.Tara.ToJsonString()) Exclusive</h2>
                 <MonsterCardGridComponent monsters=@(GetMonstersForVersion(MonsterLocationVersion.Tara)) />
             </section>
         </div>
+    }
+    @if (monsters is not null && breeds is not null)
+    {
         <div class="row mb-3">
             <div class="col-lg-6">
                 <section>
@@ -40,5 +46,5 @@
                 </section>
             </div>
         </div>
-    </div>
-}
+    }
+</div>

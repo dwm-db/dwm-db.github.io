@@ -1,42 +1,51 @@
-﻿.statistics-bar {
+﻿.footer-bar {
     font-size: 1.0rem;
     min-height: 2rem;
     color: var(--bs-secondary-color);
     background-color: var(--bs-secondary-bg);
 }
 
-    .statistics-bar ::deep p {
+    .footer-bar ::deep p {
         font-size: 0.9rem;
         margin-bottom: 1rem;
     }
 
-.link-header {
-    color: var(--bs-secondary-color);
-}
-
-.link-list {
-    color: var(--bs-secondary-color);
-}
-
-    .link-list ::deep a {
+    .footer-bar ::deep a {
         color: var(--bs-body-color);
     }
 
-        .link-list ::deep a.active {
+        .footer-bar ::deep a.active, .footer-bar ::deep a:active {
             color: var(--bs-emphasis-color);
         }
 
-            .link-list ::deep a.active:hover, .link-list ::deep a.active:focus {
+            .footer-bar ::deep a.active:hover, .footer-bar ::deep a.active:focus,
+            .footer-bar ::deep a:active:hover, .footer-bar ::deep a:active:focus {
                 color: var(--bs-emphasis-color);
             }
 
-        .link-list ::deep a:hover, .link-list ::deep a:focus {
+        .footer-bar ::deep a:hover, .footer-bar ::deep a:focus {
             color: var(--bs-emphasis-color);
         }
 
-.statistics-item {
-    font-size: 1.0rem;
-    font-weight: lighter;
-    font-style: italic;
-    color: var(--bs-tertiary-color);
+.footer-header {
+    color: var(--bs-secondary-color);
 }
+
+.brand-logo {
+    color: var(--bs-white);
+}
+
+    .brand-logo > b {
+        color: var(--bs-white);
+    }
+
+    .brand-logo > img {
+        object-fit: scale-down;
+        transform-origin: center;
+        transition: transform 0.5s ease-in-out;
+        transform: rotate(0deg);
+    }
+
+    .brand-logo:hover > img {
+        transform: rotate(-25deg) scale(1.125);
+    }

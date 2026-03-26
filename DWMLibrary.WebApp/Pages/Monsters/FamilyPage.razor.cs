@@ -5,8 +5,6 @@ namespace DWMLibrary.WebApp.Pages.Monsters
         [Parameter]
         public required string FamilyName { get; set; }
 
-        private bool dataLoaded => (monsters is not null && breeds is not null);
-
         private Monster[]? monsters;
         private Breed[]? breeds;
 
@@ -21,8 +19,7 @@ namespace DWMLibrary.WebApp.Pages.Monsters
                 monsters = await DataService.GetMonstersByFamilyAsync(_family);
                 breeds = (await DataService.GetBreedsByFamilyAsync(_family)) ?? [];
             }
-
-            if (!dataLoaded)
+            else
             {
                 NavigationManager.NavigateTo("/404");
             }

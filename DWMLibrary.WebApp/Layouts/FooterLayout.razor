@@ -1,10 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-<nav class="statistics-bar py-5">
+<nav class="footer-bar py-5">
     <div class="container">
         <div class="row justify-content-center text-start">
             <div class="col-12 col-xl-4 pe-xl-5">
-                <h6>WonderEgg</h6>
+                <NavLink class="brand-logo d-inline-flex flex-row align-items-center align-content-center p-0 mb-2" href="" Match="NavLinkMatch.All">
+                    <img class="img-fluid pt-1" src="/favicon.svg" draggable="false" alt="Logo" width="24" height="24" />
+                    <h6 class="d-block p-0 ms-2 text-center">WonderEgg</h6>
+                </NavLink>
                 <p>
                     The definitive <em>Dragon Warrior Monsters 2</em> reference.
                 </p>
@@ -17,10 +20,10 @@
                     Such material is made available for educational purposes constituting 'fair use' as provided for in section 107 of the US Copyright Law.
                 </p>
             </div>
-            <div class="col-12 col-xl-8 ps-xl-5">
+            <div class="d-none d-md-block col-12 col-xl-8 ps-xl-5">
                 <div class="row row-cols-1 row-cols-md-3 justify-content-center text-start g-3">
                     <div class="col">
-                        <h6 class="link-header">Links</h6>
+                        <h6 class="footer-header">Links</h6>
                         <ul class="link-list row row-cols-3 row-cols-md-2">
                             @foreach (var link in NavigationLinks)
                             {
@@ -38,7 +41,7 @@
                         </ul>
                     </div>
                     <div class="col">
-                        <h6 class="link-header">Families</h6>
+                        <h6 class="footer-header">Families</h6>
                         <ul class="link-list row row-cols-3 row-cols-md-2">
                             @foreach (var value in typeof(MonsterFamily).GetJsonTuples())
                             {
@@ -51,7 +54,7 @@
                         </ul>
                     </div>
                     <div class="col">
-                        <h6 class="link-header">Locations</h6>
+                        <h6 class="footer-header">Locations</h6>
                         <ul class="link-list row row-cols-3 row-cols-md-2">
                             @foreach (var value in typeof(MonsterLocationType).GetJsonTuples())
                             {

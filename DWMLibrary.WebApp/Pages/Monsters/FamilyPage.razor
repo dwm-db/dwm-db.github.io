@@ -4,17 +4,17 @@
 
 <PageTitle>WonderEgg - Family - @(FamilyName)</PageTitle>
 
-@if (dataLoaded)
-{
-    <div class="container">
-        <div class="row">
-            <h1 class="col-12">The @(FamilyName) Family</h1>
-        </div>
-        <div class="row mb-3">
-            <section>
-                <MonsterCardGridComponent monsters=@(monsters!.OrderBy(monster => monster.Id).ToArray()) />
-            </section>
-        </div>
+<div class="container">
+    <div class="row">
+        <h1 class="col-12">The @(FamilyName) Family</h1>
+    </div>
+    <div class="row mb-3">
+        <section>
+            <MonsterCardGridComponent monsters=@(monsters?.OrderBy(monster => monster.Id)?.ToArray()) />
+        </section>
+    </div>
+    @if (monsters is not null && breeds is not null)
+    {
         <div class="row mb-3">
             <div class="col-lg-6">
                 <section>
@@ -28,5 +28,5 @@
                 </section>
             </div>
         </div>
-    </div>
-}
+    }
+</div>

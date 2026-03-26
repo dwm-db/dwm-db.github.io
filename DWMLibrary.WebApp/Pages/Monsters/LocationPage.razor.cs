@@ -5,8 +5,6 @@ namespace DWMLibrary.WebApp.Pages.Monsters
         [Parameter]
         public required string LocationName { get; set; }
 
-        private bool dataLoaded => (monsters is not null && breeds is not null);
-
         private Monster[]? monsters;
         private Breed[]? breeds;
 
@@ -21,22 +19,21 @@ namespace DWMLibrary.WebApp.Pages.Monsters
                 monsters = await DataService.GetMonstersByLocationAsync(_location);
                 breeds = (await DataService.GetBreedsByLocationAsync(_location)) ?? [];
             }
-
-            if (!dataLoaded)
+            else
             {
                 NavigationManager.NavigateTo("/404");
             }
         }
 
-        private Monster[] GetMonstersForVersion(MonsterLocationVersion version)
+        private Monster[]? GetMonstersForVersion(MonsterLocationVersion version)
         {
-            return monsters!.Where(monster =>
+            return monsters?.Where(monster =>
             {
                 return monster.Locations.Any(location =>
                     {
                         return location.Version == version && string.Equals(location.Name.ToJsonString(), LocationName, StringComparison.InvariantCultureIgnoreCase);
                     });
-            }).OrderBy(monster => monster.Id).ToArray();
+            })?.OrderBy(monster => monster.Id)?.ToArray();
         }
     }
 }
