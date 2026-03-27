@@ -5,71 +5,142 @@
 
 <section class="container">
     <h1>Monsters</h1>
-    <div class="row">
-        <div class="col text-start">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle px-2 py-1" type="button" data-bs-toggle="dropdown" style="font-size: 1.25rem">
-                    @if (IsSelected(SortByOptions.DEFAULT))
-                    {
-                        <i class="bi bi-funnel"></i>
-                    }
-                    else
-                    {
-                        <i class="bi bi-funnel-fill"></i>
-                    }
-                </button>
-                <ul class="dropdown-menu bg-primary-subtle p-2">
-                    <li class="my-2">
-                        <button class=@(GetCSS(SortByOptions.DEFAULT)) type="button" @onclick="(() => SetOption(SortByOptions.DEFAULT))">
-                            Default
-                        </button>
-                    </li>
-                    <li class="my-2">
-                        <button class=@(GetCSS(SortByOptions.NAME)) type="button" @onclick="(() => SetOption(SortByOptions.NAME))">
-                            Name
-                        </button>
-                    </li>
-                    <li class="my-2">
-                        <button class=@(GetCSS(SortByOptions.SIZE)) type="button" @onclick="(() => SetOption(SortByOptions.SIZE))">
-                            Size
-                        </button>
-                    </li>
-                    <li class="my-2">
-                        <button class=@(GetCSS(SortByOptions.RARITY)) type="button" @onclick="(() => SetOption(SortByOptions.RARITY))">
-                            Rarity
-                        </button>
-                    </li>
-                </ul>
-            </div>
+    <div class="hstack gap-3">
+        <div class="input-group" role="search">
+            <label type="button" class="btn btn-primary px-3 py-1" for="searchFilter" style="font-size: 1.25rem" data-bs-toggle="modal" data-bs-target=".modal">
+                <i class="bi bi-search"></i>
+            </label>
+            <input type="search" class="form-control border-primary" name="searchFilter" id="searchFilter" autocomplete="off" placeholder="" @bind-value="filterText" @bind-value:event="oninput" />
         </div>
-        <div class="col text-end">
-            <div class="btn-group" role="group">
-                <input type="radio" class="btn-check" name="btnSortOrder" id="sortUp" autocomplete="off" checked=@IsSelected(SortOrderOptions.DEFAULT) @onclick="(() => SetOption(SortOrderOptions.DEFAULT))">
-                <label class="btn btn-outline-primary px-3 py-1" for="sortUp" style="font-size: 1.25rem">
-                    @if (IsSelected(SortByOptions.NAME))
-                    {
-                        <i class="bi bi-sort-alpha-down"></i>
-                    }
-                    else
-                    {
-                        <i class="bi bi-sort-numeric-down"></i>
-                    }
-                </label>
-
-                <input type="radio" class="btn-check" name="btnSortOrder" id="sortDown" autocomplete="off" checked=@IsSelected(SortOrderOptions.REVERSE) @onclick="(() => SetOption(SortOrderOptions.REVERSE))">
-                <label class="btn btn-outline-primary px-3 py-1" for="sortDown" style="font-size: 1.25rem">
-                    @if (IsSelected(SortByOptions.NAME))
-                    {
-                        <i class="bi bi-sort-alpha-up-alt"></i>
-                    }
-                    else
-                    {
-                        <i class="bi bi-sort-numeric-up-alt"></i>
-                    }
-                </label>
-            </div>
+        <div class="vr" />
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="btnSortBy" id="sortId" autocomplete="off" checked=@IsSelected(SortByOptions.ID) @onclick="(() => SetOption(SortByOptions.ID))">
+            <label class="btn btn-outline-primary px-3 py-1" for="sortId" style="font-size: 1.25rem">
+                <i class="bi bi-123"></i>
+            </label>
+            <input type="radio" class="btn-check" name="btnSortBy" id="sortName" autocomplete="off" checked=@IsSelected(SortByOptions.NAME) @onclick="(() => SetOption(SortByOptions.NAME))">
+            <label class="btn btn-outline-primary px-3 py-1" for="sortName" style="font-size: 1.25rem">
+                <i class="bi bi-alphabet-uppercase"></i>
+            </label>
+        </div>
+        <div class="vr" />
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="btnSortOrder" id="sortUp" autocomplete="off" checked=@IsSelected(SortOrderOptions.ASC) @onclick="(() => SetOption(SortOrderOptions.ASC))">
+            <label class="btn btn-outline-primary px-3 py-1" for="sortUp" style="font-size: 1.25rem">
+                @if (IsSelected(SortByOptions.NAME))
+                {
+                    <i class="bi bi-sort-alpha-down"></i>
+                }
+                else
+                {
+                    <i class="bi bi-sort-numeric-down"></i>
+                }
+            </label>
+            <input type="radio" class="btn-check" name="btnSortOrder" id="sortDown" autocomplete="off" checked=@IsSelected(SortOrderOptions.DESC) @onclick="(() => SetOption(SortOrderOptions.DESC))">
+            <label class="btn btn-outline-primary px-3 py-1" for="sortDown" style="font-size: 1.25rem">
+                @if (IsSelected(SortByOptions.NAME))
+                {
+                    <i class="bi bi-sort-alpha-up-alt"></i>
+                }
+                else
+                {
+                    <i class="bi bi-sort-numeric-up-alt"></i>
+                }
+            </label>
         </div>
     </div>
     <hr />
     <MonsterCardGridComponent monsters=@(GetMonsters()) />
+</section>
+<section class="modal fade" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-header bg-primary px-3 py-1">
+                <h5 class="modal-title text-start m-0">Search Options</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid overflow-hidden">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h6 class="mt-0">Family</h6>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="form-check text-nowrap m-1">
+                                        <input class="form-check-input" type="radio" name="radioFamily" id="radioFamilyAll" checked=@IsSelected((MonsterFamily?)null) @onclick="(() => SetOption((MonsterFamily?)null))">
+                                        <label class="form-check-label text-nowrap" for="radioFamilyAll">
+                                            ALL
+                                        </label>
+                                    </div>
+                                </div>
+                                @foreach (var family in Enum.GetValues<MonsterFamily>())
+                                {
+                                    <div class="col-3">
+                                        <div class="form-check text-nowrap m-1">
+                                            <input class="form-check-input" type="radio" name="radioFamily" id=@("radioFamily" + family.ToString()) checked=@IsSelected(family) @onclick="(() => SetOption(family))">
+                                            <label class="form-check-label text-nowrap" for=@("radioFamily" + family.ToString())>
+                                                @(family.ToJsonString())
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h6 class="mt-0">Size</h6>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-check text-nowrap m-1">
+                                        <input class="form-check-input" type="radio" name="radioSize" id="radioSizeAll" checked=@IsSelected((MonsterSize?)null) @onclick="(() => SetOption((MonsterSize?)null))">
+                                        <label class="form-check-label text-nowrap" for="radioSizeAll">
+                                            ALL
+                                        </label>
+                                    </div>
+                                </div>
+                                @foreach (var size in Enum.GetValues<MonsterSize>())
+                                {
+                                    <div class="col-4">
+                                        <div class="form-check text-nowrap m-1">
+                                            <input class="form-check-input" type="radio" name="radioSize" id=@("radioSize" + size.ToString()) checked=@IsSelected(size) @onclick="(() => SetOption(size))">
+                                            <label class="form-check-label text-nowrap" for=@("radioSize" + size.ToString())>
+                                                @(size.ToJsonString())
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h6 class="mt-0">Rarity</h6>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-check text-nowrap m-1">
+                                        <input class="form-check-input" type="radio" name="radioRarity" id="radioRarityAll" checked=@IsSelected((MonsterRarity?)null) @onclick="(() => SetOption((MonsterRarity?)null))">
+                                        <label class="form-check-label text-nowrap" for="radioRarityAll">
+                                            ALL
+                                        </label>
+                                    </div>
+                                </div>
+                                @foreach (var rarity in Enum.GetValues<MonsterRarity>().Where(rarity => rarity != MonsterRarity.NONE))
+                                {
+                                    <div class="col-4">
+                                        <div class="form-check text-nowrap m-1">
+                                            <input class="form-check-input" type="radio" name="radioRarity" id=@("radioRarity" + rarity.ToString()) checked=@IsSelected(rarity) @onclick="(() => SetOption(rarity))">
+                                            <label class="form-check-label text-nowrap" for=@("radioRarity" + rarity.ToString())>
+                                                @(rarity.ToJsonString())
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-primary-subtle p-1">
+                <button type="button" class="btn btn-outline-danger">Clear</button>
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Apply</button>
+            </div>
+        </div>
+    </div>
 </section>

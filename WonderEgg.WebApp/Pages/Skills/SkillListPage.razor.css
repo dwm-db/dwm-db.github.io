@@ -1,26 +1,36 @@
-﻿.nav-item ::deep a {
-    text-decoration: none;
-    transition: border-color 0.125s ease-in-out;
+﻿.dropdown-menu {
+    border-color: var(--bs-primary-border-subtle);
 }
 
-    .nav-item ::deep a.active {
-        color: var(--bs-white);
-        background-color: var(--bs-primary);
+    .dropdown-menu button {
+        color: var(--bs-body-color);
+        background-color: rgba(var(--bs-primary-rgb),0.0);
         text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.125s ease-in-out;
     }
 
-        .nav-item ::deep a.active:hover, .nav-item ::deep a.active:focus {
+        .dropdown-menu button.active, .dropdown-menu button:active {
             color: var(--bs-white);
-            background-color: var(--bs-primary);
+            background-color: rgba(var(--bs-primary-rgb),1.00);
             text-decoration: none;
         }
 
-    .nav-item ::deep a:hover, .nav-item ::deep a:focus {
-        color: var(--bs-link-hover-color);
-        background-color: rgba(var(--bs-link-color-rgb),0.125);
-        text-decoration: underline;
-    }
+            .dropdown-menu button.active:hover, .dropdown-menu button.active:focus, .dropdown-menu button.active:focus-visible, .dropdown-menu button.active:focus-within,
+            .dropdown-menu button:active:hover, .dropdown-menu button:active:focus, .dropdown-menu button:active:focus-visible, .dropdown-menu button:active:focus-within {
+                color: var(--bs-white);
+                background-color: rgba(var(--bs-primary-rgb),1.00);
+                text-decoration: none;
+            }
 
-    .nav-item ::deep a.show {
-        text-decoration: none;
-    }
+        .dropdown-menu button:hover, .dropdown-menu button:focus, .dropdown-menu button:focus-visible, .dropdown-menu button:focus-within {
+            color: var(--bs-white);
+            background-color: rgba(var(--bs-primary-rgb),0.25);
+            text-decoration: none;
+        }
+
+        .nav-item button.show, .dropdown-menu button.show {
+            color: var(--bs-body-color);
+            background-color: rgba(var(--bs-primary-rgb),0.0);
+            text-decoration: none;
+        }

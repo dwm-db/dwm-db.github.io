@@ -1,4 +1,8 @@
-﻿.dropdown-menu button {
+﻿.dropdown-menu {
+    border-color: var(--bs-primary-border-subtle);
+}
+
+.dropdown-menu button {
     color: var(--bs-body-color);
     background-color: rgba(var(--bs-primary-rgb),0.0);
     text-decoration: none;

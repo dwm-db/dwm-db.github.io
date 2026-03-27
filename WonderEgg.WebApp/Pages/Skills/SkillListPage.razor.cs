@@ -1,64 +1,101 @@
-using Microsoft.AspNetCore.Components.Routing;
-using WonderEgg.Core.Models;
-
 namespace WonderEgg.WebApp.Pages.Skills;
 
-public partial class SkillListPage : IDisposable
+public partial class SkillListPage
 {
-    private Tabs currentTab = Tabs.ALL;
+    [SupplyParameterFromQuery(Name = "sortBy")]
+    public string? SortBy { get; set; }
+
+    [SupplyParameterFromQuery(Name = "sortOrder")]
+    public string? SortOrder { get; set; }
+
+    private SortByOptions sortByOption = SortByOptions.DEFAULT;
+    private SortOrderOptions sortOrderOption = SortOrderOptions.DEFAULT;
+    private string filterText = string.Empty;
     private Skill[]? skills;
 
     protected override async Task OnInitializedAsync()
     {
-        // Subscribe to the event
-        NavigationManager.LocationChanged += LocationChanged;
-
         skills = await DataService.GetSkillsAsync();
     }
 
     protected override void OnParametersSet()
     {
-        SwitchCurrentTab();
-    }
-
-    void LocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        string navigationMethod = e.IsNavigationIntercepted ? "HTML" : "code";
-        string location = e.Location;
-        SwitchCurrentTab(location);
-        StateHasChanged();
-    }
-
-    void SwitchCurrentTab(string? location = null)
-    {
-        location ??= string.Empty;
-
-        currentTab = currentTab switch
+        if (SortBy is not null)
         {
-            _ when (NavigationManager.Uri.EndsWith("/skill/type") || location.EndsWith("/skill/type")) => Tabs.TYPE,
-            _ when (NavigationManager.Uri.EndsWith("/skill/category") || location.EndsWith("/skill/category")) => Tabs.CATEGORY,
-            _ when (NavigationManager.Uri.EndsWith("/skill/attribute") || location.EndsWith("/skill/attribute")) => Tabs.ATTRIBUTE,
-            _ => Tabs.ALL
+            SortBy = Uri.UnescapeDataString(SortBy).ToUpperInvariant();
 
+            if (Enum.IsDefined(typeof(SortByOptions), SortBy) || Enum.IsDefined(typeof(SortByOptions), int.TryParse(SortBy, out var value) ? value : string.Empty))
+            {
+                sortByOption = Enum.Parse<SortByOptions>(SortBy);
+            }
+        }
+
+        if (SortOrder is not null)
+        {
+            SortOrder = Uri.UnescapeDataString(SortOrder).ToUpperInvariant();
+
+            if (Enum.IsDefined(typeof(SortOrderOptions), SortOrder) || Enum.IsDefined(typeof(SortOrderOptions), int.TryParse(SortOrder, out var value) ? value : string.Empty))
+            {
+                sortOrderOption = Enum.Parse<SortOrderOptions>(SortOrder);
+            }
+        }
+    }
+
+    private Skill[]? GetSkills()
+    {
+        var skillList = skills?.Where(skill => skill.Name.Contains(filterText, StringComparison.InvariantCultureIgnoreCase));
+        return sortByOption switch
+        {
+            SortByOptions.DEFAULT when (sortOrderOption == SortOrderOptions.DEFAULT) => skillList?.OrderBy(skill => skill.Id)?.ToArray(),
+            SortByOptions.DEFAULT when (sortOrderOption == SortOrderOptions.REVERSE) => skillList?.OrderByDescending(skill => skill.Id)?.ToArray(),
+            SortByOptions.NAME when (sortOrderOption == SortOrderOptions.DEFAULT) => skillList?.OrderBy(skill => skill.Name)?.ToArray(),
+            SortByOptions.NAME when (sortOrderOption == SortOrderOptions.REVERSE) => skillList?.OrderByDescending(skill => skill.Name)?.ToArray(),
+            SortByOptions.TYPE when (sortOrderOption == SortOrderOptions.DEFAULT) => skillList?.OrderBy(skill => skill.Type)?.ToArray(),
+            SortByOptions.TYPE when (sortOrderOption == SortOrderOptions.REVERSE) => skillList?.OrderByDescending(skill => skill.Type)?.ToArray(),
+            SortByOptions.CATEGORY when (sortOrderOption == SortOrderOptions.DEFAULT) => skillList?.OrderBy(skill => skill.Category)?.ToArray(),
+            SortByOptions.CATEGORY when (sortOrderOption == SortOrderOptions.REVERSE) => skillList?.OrderByDescending(skill => skill.Category)?.ToArray(),
+            SortByOptions.ATTRIBUTE when (sortOrderOption == SortOrderOptions.DEFAULT) => skillList?.OrderBy(skill => skill.Attribute)?.ToArray(),
+            SortByOptions.ATTRIBUTE when (sortOrderOption == SortOrderOptions.REVERSE) => skillList?.OrderByDescending(skill => skill.Attribute)?.ToArray(),
+            _ => skillList?.ToArray()
         };
     }
 
-    void IDisposable.Dispose()
+    private void SetOption(SortByOptions option)
     {
-        // Unsubscribe from the event when our component is disposed
-        NavigationManager.LocationChanged -= LocationChanged;
+        sortByOption = option;
     }
 
-    private string IsShowActive(Tabs tab)
+    private void SetOption(SortOrderOptions option)
     {
-        return (tab == currentTab) ? "show active" : string.Empty;
+        sortOrderOption = option;
     }
 
-    private enum Tabs
+    private string GetCSS(SortByOptions option)
     {
-        ALL,
+        return "dropdown-item pb-2" + ((sortByOption == option) ? " active" : null);
+    }
+
+    private bool IsSelected(SortByOptions option)
+    {
+        return (sortByOption == option);
+    }
+
+    private bool IsSelected(SortOrderOptions option)
+    {
+        return (sortOrderOption == option);
+    }
+
+    private enum SortByOptions
+    {
+        DEFAULT,
+        NAME,
         TYPE,
         CATEGORY,
         ATTRIBUTE
+    }
+    private enum SortOrderOptions
+    {
+        DEFAULT,
+        REVERSE
     }
 }

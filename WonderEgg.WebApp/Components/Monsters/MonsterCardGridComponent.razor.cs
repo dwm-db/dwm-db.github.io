@@ -5,7 +5,7 @@ public partial class MonsterCardGridComponent
     [Parameter]
     public required Monster[]? monsters { get; set; }
 
-    private bool dataLoaded => (monsters is not null && monsters.Length > 0);
+    private bool dataLoaded => (monsters is not null);
 
     private string GetCSS(int row, int col)
     {

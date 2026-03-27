@@ -1,17 +1,28 @@
-using WonderEgg.Core.Models;
-
 namespace WonderEgg.WebApp.Pages.Monsters;
 
 public partial class MonsterListPage
 {
+    [SupplyParameterFromQuery(Name = "family")]
+    public string? FamilyFilter { get; set; }
+
+    [SupplyParameterFromQuery(Name = "size")]
+    public string? SizeFilter { get; set; }
+
+    [SupplyParameterFromQuery(Name = "rarity")]
+    public string? RarityFilter { get; set; }
+
     [SupplyParameterFromQuery(Name = "sortBy")]
     public string? SortBy { get; set; }
 
     [SupplyParameterFromQuery(Name = "sortOrder")]
     public string? SortOrder { get; set; }
 
-    private SortByOptions sortByOption = SortByOptions.DEFAULT;
-    private SortOrderOptions sortOrderOption = SortOrderOptions.DEFAULT;
+    private MonsterFamily? familyFilter = null;
+    private MonsterSize? sizeFilter = null;
+    private MonsterRarity? rarityFilter = null;
+    private SortByOptions sortByOption = SortByOptions.ID;
+    private SortOrderOptions sortOrderOption = SortOrderOptions.ASC;
+    private string filterText = string.Empty;
     private Monster[]? monsters;
 
     protected override async Task OnInitializedAsync()
@@ -21,6 +32,36 @@ public partial class MonsterListPage
 
     protected override void OnParametersSet()
     {
+        if (FamilyFilter is not null)
+        {
+            FamilyFilter = Uri.UnescapeDataString(FamilyFilter).ToUpperInvariant();
+
+            if (Enum.IsDefined(typeof(MonsterFamily), FamilyFilter) || Enum.IsDefined(typeof(MonsterFamily), int.TryParse(FamilyFilter, out var value) ? value : string.Empty))
+            {
+                familyFilter = Enum.Parse<MonsterFamily>(FamilyFilter);
+            }
+        }
+
+        if (SizeFilter is not null)
+        {
+            SizeFilter = Uri.UnescapeDataString(SizeFilter).ToUpperInvariant();
+
+            if (Enum.IsDefined(typeof(MonsterSize), SizeFilter) || Enum.IsDefined(typeof(MonsterSize), int.TryParse(SizeFilter, out var value) ? value : string.Empty))
+            {
+                sizeFilter = Enum.Parse<MonsterSize>(SizeFilter);
+            }
+        }
+
+        if (RarityFilter is not null)
+        {
+            RarityFilter = Uri.UnescapeDataString(RarityFilter).ToUpperInvariant();
+
+            if (Enum.IsDefined(typeof(MonsterRarity), RarityFilter) || Enum.IsDefined(typeof(MonsterRarity), int.TryParse(RarityFilter, out var value) ? value : string.Empty))
+            {
+                rarityFilter = Enum.Parse<MonsterRarity>(RarityFilter);
+            }
+        }
+
         if (SortBy is not null)
         {
             SortBy = Uri.UnescapeDataString(SortBy).ToUpperInvariant();
@@ -44,18 +85,57 @@ public partial class MonsterListPage
 
     private Monster[]? GetMonsters()
     {
-        return sortByOption switch
+        var monsterList = monsters?.Where(monster => monster.Name.Contains(filterText, StringComparison.InvariantCultureIgnoreCase));
+
+        if (familyFilter is not null)
+            monsterList = monsterList?.Where(monster => monster.Family == familyFilter);
+
+        if (sizeFilter is not null)
+            monsterList = monsterList?.Where(monster => monster.Size == sizeFilter);
+
+        if (rarityFilter is not null)
+            monsterList = monsterList?.Where(monster => monster.Rarity == rarityFilter);
+
+        monsterList = sortByOption switch
         {
-            SortByOptions.DEFAULT when (sortOrderOption == SortOrderOptions.DEFAULT) => monsters?.OrderBy(monster => monster.Id)?.ToArray(),
-            SortByOptions.DEFAULT when (sortOrderOption == SortOrderOptions.REVERSE) => monsters?.OrderByDescending(monster => monster.Id)?.ToArray(),
-            SortByOptions.NAME when (sortOrderOption == SortOrderOptions.DEFAULT) => monsters?.OrderBy(monster => monster.Name)?.ToArray(),
-            SortByOptions.NAME when (sortOrderOption == SortOrderOptions.REVERSE) => monsters?.OrderByDescending(monster => monster.Name)?.ToArray(),
-            SortByOptions.SIZE when (sortOrderOption == SortOrderOptions.DEFAULT) => monsters?.OrderBy(monster => monster.Size)?.ToArray(),
-            SortByOptions.SIZE when (sortOrderOption == SortOrderOptions.REVERSE) => monsters?.OrderByDescending(monster => monster.Size)?.ToArray(),
-            SortByOptions.RARITY when (sortOrderOption == SortOrderOptions.DEFAULT) => monsters?.OrderBy(monster => monster.Rarity)?.ToArray(),
-            SortByOptions.RARITY when (sortOrderOption == SortOrderOptions.REVERSE) => monsters?.OrderByDescending(monster => monster.Rarity)?.ToArray(),
-            _ => monsters
+            SortByOptions.ID when (sortOrderOption == SortOrderOptions.ASC) => monsterList?.OrderBy(monster => monster.Id),
+            SortByOptions.ID when (sortOrderOption == SortOrderOptions.DESC) => monsterList?.OrderByDescending(monster => monster.Id),
+            SortByOptions.NAME when (sortOrderOption == SortOrderOptions.ASC) => monsterList?.OrderBy(monster => monster.Name),
+            SortByOptions.NAME when (sortOrderOption == SortOrderOptions.DESC) => monsterList?.OrderByDescending(monster => monster.Name),
+            _ => monsterList
         };
+
+        return monsterList?.ToArray();
+    }
+
+    private void SetOption(MonsterFamily? option)
+    {
+        familyFilter = option;
+    }
+
+    private bool IsSelected(MonsterFamily? option)
+    {
+        return (familyFilter == option);
+    }
+
+    private void SetOption(MonsterSize? option)
+    {
+        sizeFilter = option;
+    }
+
+    private bool IsSelected(MonsterSize? option)
+    {
+        return (sizeFilter == option);
+    }
+
+    private void SetOption(MonsterRarity? option)
+    {
+        rarityFilter = option;
+    }
+
+    private bool IsSelected(MonsterRarity? option)
+    {
+        return (rarityFilter == option);
     }
 
     private void SetOption(SortByOptions option)
@@ -63,19 +143,14 @@ public partial class MonsterListPage
         sortByOption = option;
     }
 
-    private void SetOption(SortOrderOptions option)
-    {
-        sortOrderOption = option;
-    }
-
-    private string GetCSS(SortByOptions option)
-    {
-        return "dropdown-item pb-2" + ((sortByOption == option) ? " active" : null);
-    }
-
     private bool IsSelected(SortByOptions option)
     {
         return (sortByOption == option);
+    }
+
+    private void SetOption(SortOrderOptions option)
+    {
+        sortOrderOption = option;
     }
 
     private bool IsSelected(SortOrderOptions option)
@@ -85,14 +160,12 @@ public partial class MonsterListPage
 
     private enum SortByOptions
     {
-        DEFAULT,
-        NAME,
-        SIZE,
-        RARITY
+        ID,
+        NAME
     }
     private enum SortOrderOptions
     {
-        DEFAULT,
-        REVERSE
+        ASC,
+        DESC
     }
 }

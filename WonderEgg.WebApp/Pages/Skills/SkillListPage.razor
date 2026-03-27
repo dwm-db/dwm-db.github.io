@@ -1,87 +1,95 @@
 ﻿@page "/skill"
-@page "/skill/type"
-@page "/skill/category"
-@page "/skill/attribute"
-@using WonderEgg.Core.Models
-@using WonderEgg.Core.Service
 @inject IDataService DataService
-@inject NavigationManager NavigationManager
 
 <PageTitle>WonderEgg - Skills</PageTitle>
 
-<div class="container">
+<section class="container">
+    <h1>Skills</h1>
     <div class="row">
-        <h1 class="col-12">Skills</h1>
-    </div>
-    <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
-        <li class="nav-item mx-1" role="presentation">
-            <NavLink class="nav-link" href="skill" Match="NavLinkMatch.All">
-                All
-            </NavLink>
-        </li>
-        <li class="nav-item mx-1" role="presentation">
-            <NavLink class="nav-link" href="skill/type" Match="NavLinkMatch.All">
-                By Type
-            </NavLink>
-        </li>
-        <li class="nav-item mx-1" role="presentation">
-            <NavLink class="nav-link" href="skill/category" Match="NavLinkMatch.All">
-                By Category
-            </NavLink>
-        </li>
-        <li class="nav-item mx-1" role="presentation">
-            <NavLink class="nav-link" href="skill/attribute" Match="NavLinkMatch.All">
-                By Attribute
-            </NavLink>
-        </li>
-    </ul>
-    <hr class="mb-3" />
-    <div class="tab-content">
-        <div class="tab-pane fade @(IsShowActive(Tabs.ALL))" role="tabpanel">
-            <div class="row mb-3">
-                <section>
-                    <SkillCardGridComponent skills=@(skills?.OrderBy(skill => skill.Name)?.ToArray()) />
-                </section>
+        <div class="col text-start">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle px-2 py-1" type="button" data-bs-toggle="dropdown" style="font-size: 1.25rem">
+                    @if (IsSelected(SortByOptions.DEFAULT))
+                    {
+                        <i class="bi bi-123"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-alphabet-uppercase"></i>
+                    }
+                </button>
+                <ul class="dropdown-menu bg-primary-subtle p-2">
+                    <li class="my-2">
+                        <button class=@(GetCSS(SortByOptions.DEFAULT)) type="button" @onclick="(() => SetOption(SortByOptions.DEFAULT))">
+                            Default
+                        </button>
+                    </li>
+                    <li class="my-2">
+                        <button class=@(GetCSS(SortByOptions.NAME)) type="button" @onclick="(() => SetOption(SortByOptions.NAME))">
+                            Name
+                        </button>
+                    </li>
+                    <li class="my-2">
+                        <button class=@(GetCSS(SortByOptions.TYPE)) type="button" @onclick="(() => SetOption(SortByOptions.TYPE))">
+                            Type
+                        </button>
+                    </li>
+                    <li class="my-2">
+                        <button class=@(GetCSS(SortByOptions.CATEGORY)) type="button" @onclick="(() => SetOption(SortByOptions.CATEGORY))">
+                            Category
+                        </button>
+                    </li>
+                    <li class="my-2">
+                        <button class=@(GetCSS(SortByOptions.ATTRIBUTE)) type="button" @onclick="(() => SetOption(SortByOptions.ATTRIBUTE))">
+                            Attribute
+                        </button>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="tab-pane fade @(IsShowActive(Tabs.TYPE))" role="tabpanel">
-            @foreach (var skillType in Enum.GetValues<SkillType>())
-            {
-                <div class="row">
-                    <HeaderLinkComponent href=@($"/skill/type/{Uri.EscapeDataString(skillType.ToString())}") text=@($"{skillType.ToString()} Skills") />
-                </div>
-                <div class="row mb-3">
-                    <section>
-                        <SkillCardGridComponent skills=@(skills?.Where(skill => skill.Type == skillType)?.OrderBy(skill => skill.Id)?.ToArray()) />
-                    </section>
-                </div>
-            }
+        <div class="col text-start">
+            <div class="input-group" role="search">
+                <label class="input-group-text text-bg-primary border-primary px-3 py-1" type="button" style="font-size: 1.25rem" @onclick="this.StateHasChanged">
+                    @if (string.IsNullOrWhiteSpace(filterText))
+                    {
+                        <i class="bi bi-funnel"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-funnel-fill"></i>
+                    }
+                </label>
+                <input class="form-control border-primary-subtle" type="search" placeholder="" @bind-value="filterText" @bind-value:event="oninput" />
+            </div>
         </div>
-        <div class="tab-pane fade @(IsShowActive(Tabs.CATEGORY))" role="tabpanel">
-            @foreach (var skillCategory in Enum.GetValues<SkillCategory>())
-            {
-                <div class="row">
-                    <HeaderLinkComponent href=@($"/skill/category/{Uri.EscapeDataString(skillCategory.ToString())}") text=@($"{skillCategory.ToString()} Skills") />
-                </div>
-                <div class="row mb-3">
-                    <section>
-                        <SkillCardGridComponent skills=@(skills?.Where(skill => skill.Category == skillCategory)?.OrderBy(skill => skill.Id)?.ToArray()) />
-                    </section>
-                </div>
-            }
-        </div>
-        <div class="tab-pane fade @(IsShowActive(Tabs.ATTRIBUTE))" role="tabpanel">
-            @foreach (var skillAttr in Enum.GetValues<SkillAttribute>())
-            {
-                <div class="row">
-                    <HeaderLinkComponent href=@($"/skill/attribute/{Uri.EscapeDataString(skillAttr.ToString())}") text=@($"{skillAttr.ToString()} Skills") />
-                </div>
-                <div class="row mb-3">
-                    <section>
-                        <SkillCardGridComponent skills=@(skills?.Where(skill => skill.Attribute == skillAttr)?.OrderBy(skill => skill.Id)?.ToArray()) />
-                    </section>
-                </div>
-            }
+        <div class="col text-end">
+            <div class="btn-group" role="group">
+                <input type="radio" class="btn-check" name="btnSortOrder" id="sortUp" autocomplete="off" checked=@IsSelected(SortOrderOptions.DEFAULT) @onclick="(() => SetOption(SortOrderOptions.DEFAULT))">
+                <label class="btn btn-outline-primary px-3 py-1" for="sortUp" style="font-size: 1.25rem">
+                    @if (IsSelected(SortByOptions.NAME))
+                    {
+                        <i class="bi bi-sort-alpha-down"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-sort-numeric-down"></i>
+                    }
+                </label>
+
+                <input type="radio" class="btn-check" name="btnSortOrder" id="sortDown" autocomplete="off" checked=@IsSelected(SortOrderOptions.REVERSE) @onclick="(() => SetOption(SortOrderOptions.REVERSE))">
+                <label class="btn btn-outline-primary px-3 py-1" for="sortDown" style="font-size: 1.25rem">
+                    @if (IsSelected(SortByOptions.NAME))
+                    {
+                        <i class="bi bi-sort-alpha-up-alt"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-sort-numeric-up-alt"></i>
+                    }
+                </label>
+            </div>
         </div>
     </div>
-</div>
+    <hr />
+    <SkillCardGridComponent skills=@(GetSkills()) />
+</section>

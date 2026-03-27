@@ -27,7 +27,7 @@ public partial class MainLayout
         foreach (var link in path.Where(p => !string.IsNullOrWhiteSpace(p)))
         {
             lastLink = $"{lastLink}/{link}";
-            BreadcrumbLinks.Add(Uri.UnescapeDataString(link), lastLink);
+            BreadcrumbLinks.Add(Uri.UnescapeDataString(link.Split('?').FirstOrDefault() ?? string.Empty), lastLink);
         }
     }
 }
