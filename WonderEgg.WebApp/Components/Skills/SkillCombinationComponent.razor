@@ -1,0 +1,18 @@
+﻿@using WonderEgg.Core.Service
+@inject IDataService DataService
+
+@if (dataLoaded)
+{
+    <div class="Combination">
+        <SkillWithMonstersComponent skill=@(skill) isCurrent=@(skill.Id == currentSkill.Id) />
+        <div class="Operator">=</div>
+        @foreach (var s in combo!.CombinesFrom!.Index())
+        {
+            <SkillDetailColumnComponent skill=@(s.Item) currentSkill=@(currentSkill) />
+            @if (s.Index < combo.CombinesFrom!.Length - 1)
+            {
+                <div class="Operator">+</div>
+            }
+        }
+    </div>
+}

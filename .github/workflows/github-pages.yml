@@ -43,7 +43,7 @@ jobs:
 
       # Publish the site
       - name: Publish
-        run: dotnet publish 'dwm-lib.github.io.sln' -c:Release --property:PublishDir=${{env.DOTNET_ROOT}}/publish -p:GHPages=true
+        run: dotnet publish 'dwm-db.github.io.sln' -c:Release --property:PublishDir=${{env.DOTNET_ROOT}}/publish -p:GHPages=true
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

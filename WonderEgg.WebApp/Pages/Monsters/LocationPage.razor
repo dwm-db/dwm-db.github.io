@@ -1,0 +1,39 @@
+﻿@page "/location/{LocationName}"
+@using WonderEgg.Core
+@using WonderEgg.Core.Models
+@using WonderEgg.Core.Service
+@inject IDataService DataService
+@inject NavigationManager NavigationManager
+
+<PageTitle>WonderEgg - Location - @(LocationName)</PageTitle>
+
+<section class="container">
+    <h1>@(LocationName)</h1>
+    <hr />
+    <MonsterCardGridComponent monsters=@(GetMonstersForVersion(MonsterLocationVersion.Both)) />
+    @if (GetMonstersForVersion(MonsterLocationVersion.Cobi) is not null)
+    {
+        <h2>@(MonsterLocationVersion.Cobi.ToJsonString()) Exclusive</h2>
+        <MonsterCardGridComponent monsters=@(GetMonstersForVersion(MonsterLocationVersion.Cobi)) />
+    }
+    @if (GetMonstersForVersion(MonsterLocationVersion.Tara) is not null)
+    {
+        <h2>@(MonsterLocationVersion.Tara.ToJsonString()) Exclusive</h2>
+        <MonsterCardGridComponent monsters=@(GetMonstersForVersion(MonsterLocationVersion.Tara)) />
+    }
+    <div class="row">
+        @if (monsters is not null && monsters.Length > 0)
+        {
+            <div class="col">
+                <h2>Growths</h2>
+                <MonsterGrowthsComponent monsters=@(monsters) includeNames=true />
+            </div>
+        }
+        @if (breeds is not null && breeds.Length > 0)
+        {
+            <div class="col">
+                <MonsterBreedsComponent breeds=@(breeds) includeTargets=true />
+            </div>
+        }
+    </div>
+</section>

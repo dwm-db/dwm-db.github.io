@@ -1,0 +1,13 @@
+﻿@page "/Json"
+@using WonderEgg.Core.Service
+@inject IDataService DataService
+@inject NavigationManager NavigationManager
+
+<PageTitle>WonderEgg - Json</PageTitle>
+
+@if (dataLoaded)
+{
+    <section class="container-fluid h-100">
+        <code>@(json)</code>
+    </section>
+}

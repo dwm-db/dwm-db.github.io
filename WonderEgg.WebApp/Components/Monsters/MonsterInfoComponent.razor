@@ -1,0 +1,103 @@
+﻿@using WonderEgg.Core
+@using WonderEgg.Core.Models
+@if (dataLoaded)
+{
+    <div class="row MonsterInfo justify-content-lg-center align-content-lg-center text-start mb-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-2 mb-3 justify-content-center align-content-center align-items-center">
+            <MonsterImageComponent monster=@(monster) size="MonsterImageComponent.MonsterImageSize.Medium" />
+            @* <section>
+                <div class="col-12" style=@($"height: 96px; background-image: url(/img/2x/{monster!.Name.ToLower()}-2x.png); background-repeat: no-repeat; background-position: center;") />
+            </section> *@
+        </div>
+        <div class="col-12 col-sm-8 col-md-4 col-lg-3 mb-3">
+            <section>
+                <div class="row align-items-center mb-3">
+                    <h3 class="col-4 mb-0">Family</h3>
+                    <span class="col-8">
+                        <a href=@($"/family/{Uri.EscapeDataString(monster!.Family.ToString())}")>
+                            @(monster!.Family.ToJsonString())
+                        </a>
+                    </span>
+                </div>
+                <div class="row align-items-center mb-3">
+                    <h3 class="col-4 mb-0">Size</h3>
+                    <span class="col-8">
+                        @if (monster!.Size is not null)
+                        {
+                            <a href=@($"/monster/size/{Uri.EscapeDataString(monster!.Size.ToString() ?? string.Empty)}")>
+                                @(monster.Size.ToJsonString())
+                            </a>
+                        }
+                        else
+                        {
+                            <span>NONE</span>
+                        }
+                    </span>
+                </div>
+                <div class="row align-items-center">
+                    <h3 class="col-4 mb-0">Rarity</h3>
+                    <span class="col-8">
+                        @if (monster!.Rarity is not null)
+                        {
+                            <a href=@($"/monster/rarity/{monster!.Rarity}")>
+                                @(monster.Rarity.ToJsonString())
+                            </a>
+                        }
+                        else
+                        {
+                            <span>NONE</span>
+                        }
+                    </span>
+                </div>
+            </section>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <section>
+                <h3 class="mt-0">Skills</h3>
+                <ul>
+                    @foreach (var skill in monster.Skills.Select(skill => skill.Name))
+                    {
+                        <li>
+                            <a href=@($"/skill/{Uri.EscapeDataString(skill)}")>
+                                @(skill)
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </section>
+        </div>
+        <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-auto mb-3">
+            <section>
+                <h3 class="mt-0">Locations</h3>
+                @if (monster.Locations is null || monster.Locations.Length <= 0)
+                {
+                    <p>Your heart &#x1F604</p>
+                }
+                else
+                {
+                    <ul>
+                        @foreach (var loc in monster.Locations)
+                        {
+                            <li>
+                                <a href=@($"/location/{Uri.EscapeDataString(loc.Name.ToString())}")>
+                                    @(loc.Name.ToJsonString())
+                                    @if (loc.Version != MonsterLocationVersion.Both)
+                                    {
+                                        <span>
+                                            @($" ({loc.Version.ToJsonString()})")
+                                        </span>
+                                    }
+                                </a>
+                                @if (!string.IsNullOrEmpty(loc.Description))
+                                {
+                                    <br />
+                                    @($" - {loc.Description}")
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </section>
+        </div>
+    </div>
+}

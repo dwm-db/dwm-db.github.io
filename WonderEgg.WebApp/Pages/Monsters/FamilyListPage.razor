@@ -1,0 +1,20 @@
+﻿@page "/family"
+@using WonderEgg.Core
+@using WonderEgg.Core.Models
+@using WonderEgg.Core.Service
+@inject IDataService DataService
+
+<PageTitle>WonderEgg - Families</PageTitle>
+
+<section class="container">
+    <h1>Families</h1>
+    <CardGridComponent href=@($"/family") categories=@(typeof(MonsterFamily).GetJsonTuples()) />
+    <hr />
+    @foreach (var family in Enum.GetValues<MonsterFamily>())
+    {
+        <div class="row">
+            <HeaderLinkComponent href=@($"/family/{Uri.EscapeDataString(family.ToString())}") text=@($"The {family.ToJsonString()} Family") />
+        </div>
+        <MonsterCardGridComponent monsters=@(monsters?.Where(monster => monster.Family == family)?.OrderBy(monster => monster.Id)?.ToArray()) />
+    }
+</section>

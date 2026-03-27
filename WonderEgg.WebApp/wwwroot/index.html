@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WonderEgg</title>
+    <base href="/" />
+    <link rel="canonical" href="https://dwm-db.github.io/">
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <!-- Meta Info -->
+    <meta name="application-name" content="WonderEgg" />
+    <meta name="author" content="dwm-db" />
+    <meta name="description" content="The definitive Dragon Warrior Monsters 2 reference." />
+    <meta name="keywords" content="Dragon, Warrior, Monsters, DWM, DWM2, Breeds, Skills, GameBoy, GBC, Cobi, Tara, WonderEgg" />
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/bootstrap-icons/dist/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="css/blazor.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="WonderEgg.WebApp.styles.css" />
+    <!-- Scripts -->
+    <script defer src="js/bootstrap-color-modes.js"></script>
+    <script defer src="js/app.js"></script>
+    <script defer src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="_framework/blazor.webassembly.js"></script>
+    <script defer>
+        navigator.serviceWorker.register('service-worker.js');
+    </script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="sticky-top shadow-lg">
+        <!-- Header View -->
+    </header>
+    <main class="flex-grow-1">
+        <!-- Main View -->
+        <section class="d-flex flex-column min-vh-100">
+            <div class="spinner m-auto">
+                <span class="spinner-border" aria-hidden="true"></span>
+                <span class="spinner-text" role="status"></span>
+            </div>
+        </section>
+        <!-- Main View -->
+    </main>
+    <footer class="mt-auto">
+        <!-- Footer View -->
+    </footer>
+</body>
+</html>

@@ -1,0 +1,66 @@
+﻿@page "/"
+@using WonderEgg.Core
+@using WonderEgg.Core.Models
+@using WonderEgg.Core.Service
+@inject IDataService DataService
+
+<PageTitle>WonderEgg - Home</PageTitle>
+
+<section class="container">
+    <h1>WonderEgg</h1>
+    <p class="text-center">
+        Welcome to the breed database for Dragon Warrior: Monsters 2.
+        <br />
+        Click any link to start.
+    </p>
+    <hr />
+    <div class="row g-3">
+        <HeaderLinkComponent href=@($"/monster") text=@($"Monsters") h1=true />
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <HeaderLinkComponent href=@($"/family") text=@($"Families") />
+            </div>
+            <CardGridComponent href=@($"/family") categories=@(typeof(MonsterFamily).GetJsonTuples()) halfSize=true />
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <HeaderLinkComponent href=@($"/location") text=@($"Locations") />
+            </div>
+            <CardGridComponent href=@($"/location") categories=@(typeof(MonsterLocationType).GetJsonTuples()) halfSize=true />
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <HeaderLinkComponent href=@($"/monster/size") text=@($"Sizes") />
+            </div>
+            <CardGridComponent href=@($"/monster/size") categories=@(typeof(MonsterSize).GetJsonTuples()) halfSize=true />
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <HeaderLinkComponent href=@($"/monster/rarity") text=@($"Rarities") />
+            </div>
+            <CardGridComponent href=@($"/monster/rarity") categories=@(typeof(MonsterRarity).GetJsonTuples()) halfSize=true />
+        </div>
+    </div>
+    <hr />
+    <div class="row g-3">
+        <HeaderLinkComponent href=@($"/skill") text=@($"Skills") h1=true />
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <HeaderLinkComponent href=@($"/skill/type") text=@($"Types") />
+            </div>
+            <CardGridComponent href=@($"/skill/type") categories=@(typeof(SkillType).GetJsonTuples()) halfSize=true />
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <HeaderLinkComponent href=@($"/skill/category") text=@($"Categories") />
+            </div>
+            <CardGridComponent href=@($"/skill/category") categories=@(typeof(SkillCategory).GetJsonTuples()) halfSize=true />
+        </div>
+        <div class="col-12">
+            <div class="row">
+                <HeaderLinkComponent href=@($"/skill/attribute") text=@($"Attributes") />
+            </div>
+            <CardGridComponent href=@($"/skill/attribute") categories=@(typeof(SkillAttribute).GetJsonTuples()) />
+        </div>
+    </div>
+</section>

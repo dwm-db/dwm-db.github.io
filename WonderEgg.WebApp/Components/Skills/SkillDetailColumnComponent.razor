@@ -1,0 +1,16 @@
+﻿@using WonderEgg.Core.Service
+@inject IDataService DataService
+
+@if (dataLoaded)
+{
+    <div class="SkillDetailColumn">
+        @foreach (var s in upgradeGroup!.Index())
+        {
+            <SkillWithMonstersComponent skill=@(s.Item.Skill) isCurrent=@(s.Item.Skill.Id == currentSkill.Id) isRelevant=@(s.Item.Skill.Id == skill.Id) showMonsters=@(!upgradeGroup!.Any(combo => combo.Skill.Id == currentSkill.Id)) />
+            @if (s.Index < upgradeGroup!.Length - 1)
+            {
+                <div class="Operator">↓</div>
+            }
+        }
+    </div>
+}

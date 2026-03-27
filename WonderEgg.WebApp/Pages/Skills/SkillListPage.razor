@@ -1,0 +1,87 @@
+﻿@page "/skill"
+@page "/skill/type"
+@page "/skill/category"
+@page "/skill/attribute"
+@using WonderEgg.Core.Models
+@using WonderEgg.Core.Service
+@inject IDataService DataService
+@inject NavigationManager NavigationManager
+
+<PageTitle>WonderEgg - Skills</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <h1 class="col-12">Skills</h1>
+    </div>
+    <ul class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
+        <li class="nav-item mx-1" role="presentation">
+            <NavLink class="nav-link" href="skill" Match="NavLinkMatch.All">
+                All
+            </NavLink>
+        </li>
+        <li class="nav-item mx-1" role="presentation">
+            <NavLink class="nav-link" href="skill/type" Match="NavLinkMatch.All">
+                By Type
+            </NavLink>
+        </li>
+        <li class="nav-item mx-1" role="presentation">
+            <NavLink class="nav-link" href="skill/category" Match="NavLinkMatch.All">
+                By Category
+            </NavLink>
+        </li>
+        <li class="nav-item mx-1" role="presentation">
+            <NavLink class="nav-link" href="skill/attribute" Match="NavLinkMatch.All">
+                By Attribute
+            </NavLink>
+        </li>
+    </ul>
+    <hr class="mb-3" />
+    <div class="tab-content">
+        <div class="tab-pane fade @(IsShowActive(Tabs.ALL))" role="tabpanel">
+            <div class="row mb-3">
+                <section>
+                    <SkillCardGridComponent skills=@(skills?.OrderBy(skill => skill.Name)?.ToArray()) />
+                </section>
+            </div>
+        </div>
+        <div class="tab-pane fade @(IsShowActive(Tabs.TYPE))" role="tabpanel">
+            @foreach (var skillType in Enum.GetValues<SkillType>())
+            {
+                <div class="row">
+                    <HeaderLinkComponent href=@($"/skill/type/{Uri.EscapeDataString(skillType.ToString())}") text=@($"{skillType.ToString()} Skills") />
+                </div>
+                <div class="row mb-3">
+                    <section>
+                        <SkillCardGridComponent skills=@(skills?.Where(skill => skill.Type == skillType)?.OrderBy(skill => skill.Id)?.ToArray()) />
+                    </section>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade @(IsShowActive(Tabs.CATEGORY))" role="tabpanel">
+            @foreach (var skillCategory in Enum.GetValues<SkillCategory>())
+            {
+                <div class="row">
+                    <HeaderLinkComponent href=@($"/skill/category/{Uri.EscapeDataString(skillCategory.ToString())}") text=@($"{skillCategory.ToString()} Skills") />
+                </div>
+                <div class="row mb-3">
+                    <section>
+                        <SkillCardGridComponent skills=@(skills?.Where(skill => skill.Category == skillCategory)?.OrderBy(skill => skill.Id)?.ToArray()) />
+                    </section>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade @(IsShowActive(Tabs.ATTRIBUTE))" role="tabpanel">
+            @foreach (var skillAttr in Enum.GetValues<SkillAttribute>())
+            {
+                <div class="row">
+                    <HeaderLinkComponent href=@($"/skill/attribute/{Uri.EscapeDataString(skillAttr.ToString())}") text=@($"{skillAttr.ToString()} Skills") />
+                </div>
+                <div class="row mb-3">
+                    <section>
+                        <SkillCardGridComponent skills=@(skills?.Where(skill => skill.Attribute == skillAttr)?.OrderBy(skill => skill.Id)?.ToArray()) />
+                    </section>
+                </div>
+            }
+        </div>
+    </div>
+</div>
