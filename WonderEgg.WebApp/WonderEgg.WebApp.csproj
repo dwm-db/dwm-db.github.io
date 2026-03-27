@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DWMLibrary.Core\WonderEgg.Core.csproj" />
+    <ProjectReference Include="..\WonderEgg.Core\WonderEgg.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
